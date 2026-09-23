@@ -198,14 +198,10 @@ function MiniGrid({ grid, state }: { grid: Grid; state: SimState }) {
 function TreeBranch({
   node,
   childrenByParent,
-  depth,
-  maxDepth,
   grid,
 }: {
   node: TreeNode;
   childrenByParent: Map<number, TreeNode[]>;
-  depth: number;
-  maxDepth: number;
   grid: Grid;
 }) {
   const children = childrenByParent.get(node.id) ?? [];
@@ -221,21 +217,17 @@ function TreeBranch({
           {node.result === undefined ? "…" : `→ ${node.result}`}
         </span>
       </div>
-      {children.length > 0 && depth < maxDepth ? (
+      {children.length > 0 ? (
         <div className="tree-children">
           {children.map((child) => (
             <TreeBranch
               key={child.id}
               node={child}
               childrenByParent={childrenByParent}
-              depth={depth + 1}
-              maxDepth={maxDepth}
               grid={grid}
             />
           ))}
         </div>
-      ) : children.length > 0 ? (
-        <div className="tree-collapsed">+ {children.length} deeper calls</div>
       ) : null}
     </div>
   );
@@ -522,6 +514,18 @@ export default function Home() {
             {playing ? "Ⅱ pause" : "▶ play trace"}
           </button>
           <button
+            className="icon-button step-button"
+            onClick={() => {
+              setPlaying(false);
+              setCursor((value) => Math.min(value + 1, trace.events.length - 1));
+            }}
+            disabled={cursor >= trace.events.length - 1}
+            aria-label="Advance one trace step"
+            title="Advance one trace step"
+          >
+            ▷|
+          </button>
+          <button
             className="icon-button"
             onClick={jumpEnd}
             aria-label="Jump to end"
@@ -705,8 +709,6 @@ export default function Home() {
           <TreeBranch
             node={trace.treeNodes[0]}
             childrenByParent={childrenByParent}
-            depth={0}
-            maxDepth={4}
             grid={grid}
           />
         </div>
@@ -714,7 +716,10 @@ export default function Home() {
           <span>
             <i className="tree-key-dot" /> key = (step, row₁, row₂)
           </span>
-          <span>depth 05+ is folded to keep the map readable</span>
+          <span>
+            scroll sideways to follow branches · scroll down to explore deeper
+            calls
+          </span>
         </div>
       </section>
 

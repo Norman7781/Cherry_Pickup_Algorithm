@@ -205,6 +205,14 @@ input {
   width: 38px;
   font-size: 20px;
 }
+.step-button {
+  width: 44px;
+  font-size: 16px;
+}
+.icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
 .play-button {
   padding: 0 18px;
   border-color: var(--orange);
@@ -670,7 +678,7 @@ input[type="range"] {
   margin-top: 18px;
   padding: 30px;
   background: #eef2ed;
-  overflow: hidden;
+  overflow: visible;
 }
 .tree-heading {
   display: flex;
@@ -720,11 +728,18 @@ input[type="range"] {
   color: var(--ink);
 }
 .tree-scroll {
+  width: 100%;
+  height: auto;
+  min-width: 0;
   overflow-x: auto;
+  overflow-y: visible;
   padding: 8px 0 22px;
+  overscroll-behavior-x: contain;
 }
 .tree-branch {
+  display: block;
   min-width: max-content;
+  width: max-content;
 }
 .tree-node {
   display: inline-flex;
@@ -794,7 +809,8 @@ input[type="range"] {
 }
 .tree-children {
   display: flex;
-  gap: 16px;
+  flex-direction: column;
+  gap: 4px;
   align-items: flex-start;
   margin-left: 21px;
   padding: 7px 0 3px 21px;
@@ -806,17 +822,10 @@ input[type="range"] {
 .tree-children > .tree-branch::before {
   content: "";
   position: absolute;
-  top: 22px;
+  top: 45px;
   left: -22px;
   width: 21px;
   border-top: 1px solid #bfcec2;
-}
-.tree-collapsed {
-  margin: 4px 0 4px 21px;
-  color: var(--muted);
-  font:
-    10px var(--font-geist-mono),
-    monospace;
 }
 .tree-footer {
   display: flex;
