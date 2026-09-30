@@ -1,0 +1,428 @@
+{
+  "python": "3.14.6",
+  "correctness": {
+    "checks": 6000,
+    "mismatches": 0
+  },
+  "examples": [
+    {
+      "grid": [
+        [
+          0,
+          1,
+          -1
+        ],
+        [
+          1,
+          0,
+          -1
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "expected": 5,
+      "top_down": 5,
+      "bottom_up": 5
+    },
+    {
+      "grid": [
+        [
+          1,
+          1,
+          -1
+        ],
+        [
+          1,
+          -1,
+          1
+        ],
+        [
+          -1,
+          1,
+          1
+        ]
+      ],
+      "expected": 0,
+      "top_down": 0,
+      "bottom_up": 0
+    }
+  ],
+  "greedy": {
+    "grid": [
+      [
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "greedy": 14,
+    "optimal": 15
+  },
+  "performance": {
+    "open": [
+      {
+        "n": 5,
+        "top_down": {
+          "answer": 16,
+          "time_ms": 0.08949999755714089,
+          "peak_kb": 3.96875,
+          "states": 241
+        },
+        "bottom_up": {
+          "answer": 16,
+          "time_ms": 0.024542008759453893,
+          "peak_kb": 0.59375,
+          "states": 84
+        }
+      },
+      {
+        "n": 10,
+        "top_down": {
+          "answer": 36,
+          "time_ms": 0.826708012027666,
+          "peak_kb": 36.4609375,
+          "states": 2281
+        },
+        "bottom_up": {
+          "answer": 36,
+          "time_ms": 0.16729100025258958,
+          "peak_kb": 1.8984375,
+          "states": 669
+        }
+      },
+      {
+        "n": 15,
+        "top_down": {
+          "answer": 56,
+          "time_ms": 3.962834001868032,
+          "peak_kb": 231.8359375,
+          "states": 8121
+        },
+        "bottom_up": {
+          "answer": 56,
+          "time_ms": 0.6674579926766455,
+          "peak_kb": 3.8515625,
+          "states": 2254
+        }
+      },
+      {
+        "n": 20,
+        "top_down": {
+          "answer": 76,
+          "time_ms": 7.107167009962723,
+          "peak_kb": 380.4375,
+          "states": 19761
+        },
+        "bottom_up": {
+          "answer": 76,
+          "time_ms": 1.2285830016480759,
+          "peak_kb": 6.7109375,
+          "states": 5339
+        }
+      },
+      {
+        "n": 25,
+        "top_down": {
+          "answer": 96,
+          "time_ms": 13.698333001229912,
+          "peak_kb": 882.1328125,
+          "states": 39201
+        },
+        "bottom_up": {
+          "answer": 96,
+          "time_ms": 2.274792001117021,
+          "peak_kb": 10.34375,
+          "states": 10424
+        }
+      },
+      {
+        "n": 30,
+        "top_down": {
+          "answer": 116,
+          "time_ms": 24.53429199522361,
+          "peak_kb": 1844.59375,
+          "states": 68441
+        },
+        "bottom_up": {
+          "answer": 116,
+          "time_ms": 4.070875002071261,
+          "peak_kb": 14.6484375,
+          "states": 18009
+        }
+      },
+      {
+        "n": 35,
+        "top_down": {
+          "answer": 136,
+          "time_ms": 39.30891699565109,
+          "peak_kb": 3395.6640625,
+          "states": 109481
+        },
+        "bottom_up": {
+          "answer": 136,
+          "time_ms": 6.29470800049603,
+          "peak_kb": 19.8515625,
+          "states": 28594
+        }
+      },
+      {
+        "n": 40,
+        "top_down": {
+          "answer": 156,
+          "time_ms": 57.16799999936484,
+          "peak_kb": 4283.6640625,
+          "states": 164321
+        },
+        "bottom_up": {
+          "answer": 156,
+          "time_ms": 9.130625010584481,
+          "peak_kb": 25.875,
+          "states": 42679
+        }
+      },
+      {
+        "n": 45,
+        "top_down": {
+          "answer": 176,
+          "time_ms": 82.3329169943463,
+          "peak_kb": 6918.640625,
+          "states": 234961
+        },
+        "bottom_up": {
+          "answer": 176,
+          "time_ms": 12.901790993055329,
+          "peak_kb": 33.25,
+          "states": 60764
+        }
+      },
+      {
+        "n": 50,
+        "top_down": {
+          "answer": 196,
+          "time_ms": 115.64679100411013,
+          "peak_kb": 8423.7265625,
+          "states": 323401
+        },
+        "bottom_up": {
+          "answer": 196,
+          "time_ms": 18.23258299555164,
+          "peak_kb": 41.21875,
+          "states": 83349
+        }
+      }
+    ],
+    "random": [
+      {
+        "n": 5,
+        "top_down": {
+          "answer": 8,
+          "time_ms": 0.05658400186803192,
+          "peak_kb": 4.6953125,
+          "states": 120
+        },
+        "bottom_up": {
+          "answer": 8,
+          "time_ms": 0.020042003598064184,
+          "peak_kb": 0.59375,
+          "states": 60
+        }
+      },
+      {
+        "n": 10,
+        "top_down": {
+          "answer": 29,
+          "time_ms": 0.4897500039078295,
+          "peak_kb": 55.328125,
+          "states": 1149
+        },
+        "bottom_up": {
+          "answer": 29,
+          "time_ms": 0.23379200138151646,
+          "peak_kb": 1.8984375,
+          "states": 497
+        }
+      },
+      {
+        "n": 15,
+        "top_down": {
+          "answer": 40,
+          "time_ms": 1.010374995530583,
+          "peak_kb": 55.28125,
+          "states": 2531
+        },
+        "bottom_up": {
+          "answer": 40,
+          "time_ms": 0.4455829912330955,
+          "peak_kb": 3.8515625,
+          "states": 1765
+        }
+      },
+      {
+        "n": 20,
+        "top_down": {
+          "answer": 62,
+          "time_ms": 2.941582992207259,
+          "peak_kb": 424.890625,
+          "states": 7000
+        },
+        "bottom_up": {
+          "answer": 62,
+          "time_ms": 0.9587500098859891,
+          "peak_kb": 6.7109375,
+          "states": 3540
+        }
+      },
+      {
+        "n": 25,
+        "top_down": {
+          "answer": 80,
+          "time_ms": 2.1277089981595054,
+          "peak_kb": 218.7109375,
+          "states": 5278
+        },
+        "bottom_up": {
+          "answer": 80,
+          "time_ms": 1.6294999950332567,
+          "peak_kb": 10.34375,
+          "states": 7446
+        }
+      },
+      {
+        "n": 30,
+        "top_down": {
+          "answer": 90,
+          "time_ms": 6.392166993464343,
+          "peak_kb": 873.953125,
+          "states": 14370
+        },
+        "bottom_up": {
+          "answer": 90,
+          "time_ms": 3.0340000084834173,
+          "peak_kb": 14.6484375,
+          "states": 12392
+        }
+      },
+      {
+        "n": 35,
+        "top_down": {
+          "answer": 115,
+          "time_ms": 16.370708995964378,
+          "peak_kb": 1553.234375,
+          "states": 39034
+        },
+        "bottom_up": {
+          "answer": 115,
+          "time_ms": 5.064457989647053,
+          "peak_kb": 19.8515625,
+          "states": 19854
+        }
+      },
+      {
+        "n": 40,
+        "top_down": {
+          "answer": 128,
+          "time_ms": 15.50570799736306,
+          "peak_kb": 1732.0390625,
+          "states": 38339
+        },
+        "bottom_up": {
+          "answer": 128,
+          "time_ms": 6.935375000466593,
+          "peak_kb": 25.875,
+          "states": 30248
+        }
+      },
+      {
+        "n": 45,
+        "top_down": {
+          "answer": 135,
+          "time_ms": 31.323374991188757,
+          "peak_kb": 3687.3671875,
+          "states": 75498
+        },
+        "bottom_up": {
+          "answer": 135,
+          "time_ms": 10.446250002132729,
+          "peak_kb": 33.25,
+          "states": 43369
+        }
+      },
+      {
+        "n": 50,
+        "top_down": {
+          "answer": 156,
+          "time_ms": 41.44670799723826,
+          "peak_kb": 4305.6953125,
+          "states": 105540
+        },
+        "bottom_up": {
+          "answer": 156,
+          "time_ms": 14.044875002582557,
+          "peak_kb": 41.21875,
+          "states": 61498
+        }
+      }
+    ]
+  }
+}

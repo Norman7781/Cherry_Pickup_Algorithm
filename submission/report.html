@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Cherry Pickup – Term Project Report</title>
+<style>
+@page { size: A4; margin: 18mm 17mm 18mm 17mm; }
+* { box-sizing: border-box; }
+body { font: 10.5pt/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif; color: #17211f; margin: 0; }
+h1 { font-size: 26pt; line-height: 1.1; margin: 0 0 6px; letter-spacing: -0.02em; }
+h2 { font-size: 15pt; margin: 22px 0 8px; padding-bottom: 4px; border-bottom: 2px solid #e56f45; break-after: avoid; }
+h3 { font-size: 11.5pt; margin: 14px 0 6px; break-after: avoid; }
+p { margin: 0 0 8px; text-align: justify; }
+code, pre { font-family: Menlo, Consolas, monospace; }
+code { font-size: 9pt; background: #f1f3ee; padding: 0 3px; border-radius: 2px; }
+pre { font-size: 8pt; line-height: 1.4; background: #f6f7f3; border: 1px solid #dde2da; padding: 8px 10px; white-space: pre-wrap; margin: 6px 0 10px; }
+pre.code { font-size: 7.6pt; }
+table { border-collapse: collapse; margin: 6px 0 12px; width: 100%; break-inside: avoid; }
+th, td { border: 1px solid #d4d9d0; padding: 4px 6px; font-size: 9pt; text-align: left; vertical-align: top; }
+th { background: #eef1ea; }
+td.num, .perf td { text-align: right; }
+.perf td:first-child { text-align: center; }
+.ph { background: #fff1a8; padding: 0 2px; }
+.cover { height: 245mm; display: flex; flex-direction: column; justify-content: space-between; break-after: page; }
+.kicker { color: #e56f45; font: 700 9pt/1 Menlo, monospace; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 14px; }
+.subtitle { font-size: 13pt; color: #52605a; margin-bottom: 28px; }
+.cover table { width: 70%; }
+.cover .meta td { border: 0; padding: 2px 0; font-size: 10.5pt; }
+.box { border: 1px solid #d4d9d0; border-left: 4px solid #e56f45; background: #fbf7f3; padding: 8px 12px; margin: 8px 0 12px; break-inside: avoid; }
+.box.blue { border-left-color: #4b91a5; background: #f2f8fa; }
+.box p:last-child { margin: 0; }
+.figs { display: flex; gap: 12px; align-items: flex-start; justify-content: center; margin: 8px 0; break-inside: avoid; flex-wrap: wrap; }
+.figs figure { margin: 0; text-align: center; }
+figcaption { font-size: 8.5pt; color: #52605a; margin-top: 4px; max-width: 330px; }
+.layers { display: flex; flex-wrap: wrap; gap: 8px; break-inside: avoid; }
+.layer-box { border: 1px solid #d4d9d0; padding: 4px; }
+.layer-title { font: 700 8pt Menlo, monospace; color: #e56f45; margin-bottom: 2px; }
+table.layer { width: auto; margin: 0; }
+table.layer th, table.layer td { font: 8pt Menlo, monospace; padding: 2px 5px; text-align: center; }
+table.layer td.off { background: repeating-linear-gradient(45deg, #eceee8, #eceee8 3px, #e3e6df 3px, #e3e6df 6px); }
+table.layer td.val { background: #d9eee2; font-weight: 700; }
+table.layer td.neg { color: #a8b0aa; }
+.legend { font-size: 8.5pt; color: #52605a; }
+.sw { display: inline-block; width: 10px; height: 10px; border: 1px solid #9aa69f; vertical-align: -1px; margin: 0 3px 0 8px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.page-break { break-before: page; }
+ul, ol { margin: 0 0 8px; padding-left: 20px; }
+li { margin-bottom: 3px; }
+.small { font-size: 9pt; color: #52605a; }
+</style></head><body>
+
+<section class="cover">
+  <div>
+    <div class="kicker">Term Project · Algorithm Design</div>
+    <h1>Cherry Pickup</h1>
+    <div class="subtitle">LeetCode 741 — solved with top-down DFS + memoization and bottom-up tabulation, with a comparison of both approaches</div>
+    <table class="meta">
+      <tr><td style="width:120px"><b>Course</b></td><td><span class="ph">[Course code] Algorithm Design</span></td></tr>
+      <tr><td><b>Instructor</b></td><td><span class="ph">[Instructor name]</span></td></tr>
+      <tr><td><b>Date</b></td><td>30 September 2026</td></tr>
+      <tr><td><b>Online judge</b></td><td>LeetCode, problem 741 “Cherry Pickup” (Hard)</td></tr>
+    </table>
+  </div>
+  <div>
+    <h3>Team members</h3>
+    <table><tr><th>Name</th><th>Student ID</th></tr><tr><td><span class="ph">[Name 1]</span></td><td><span class="ph">[Student ID 1]</span></td></tr><tr><td><span class="ph">[Name 2]</span></td><td><span class="ph">[Student ID 2]</span></td></tr><tr><td><span class="ph">[Name 3]</span></td><td><span class="ph">[Student ID 3]</span></td></tr></table>
+  </div>
+  <div class="small">
+    <b>Contents.</b> 1 Problem description · 2 Key ideas · 3 Approach 1: top-down DFS + memoization ·
+    4 Approach 2: bottom-up tabulation · 5 Complexity analysis · 6 Comparison of the two approaches ·
+    7 Testing and online-judge submission · 8 Visualization tool · 9 Conclusion · 10 AI usage disclosure ·
+    References · Appendix: source code
+  </div>
+</section>
+
+<h2>1. Problem description</h2>
+<p>We are given an <i>n × n</i> grid (1 ≤ n ≤ 50). Every cell holds one of three values:
+<b>0</b> — an empty cell that can be walked through, <b>1</b> — a cell with one cherry that can be picked up and walked
+through, and <b>−1</b> — a thorn that blocks the way. The top-left and bottom-right cells are never thorns.</p>
+<p>A player starts at (0, 0), walks to (n−1, n−1) moving only <b>right or down</b> through non-thorn cells, and then walks
+back to (0, 0) moving only <b>left or up</b>. Whenever the player passes a cell with a cherry, the cherry is picked up and the
+cell becomes empty, so a cherry can be collected <b>at most once</b>. The task is to return the maximum number of cherries
+that can be collected. If there is no valid path between the two corners, the answer is 0.</p>
+<div class="figs">
+  <figure><svg viewBox="0 0 122 122" width="122" height="122" class="fig"><defs><linearGradient id="both" x1="0" y1="0" x2="1" y2="1"><stop offset="50%" stop-color="#f6c9b6"/><stop offset="50%" stop-color="#bfdde7"/></linearGradient></defs><rect x="18" y="18" width="34" height="34" fill="url(#both)" stroke="#9aa69f" stroke-width="1"/><rect x="52" y="18" width="34" height="34" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><text x="69.0" y="40.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="86" y="18" width="34" height="34" fill="#273532" stroke="#9aa69f" stroke-width="1"/><text x="103.0" y="40.0" text-anchor="middle" font-size="14" fill="#ffffff">✕</text><rect x="18" y="52" width="34" height="34" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><text x="35.0" y="74.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="52" y="52" width="34" height="34" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><rect x="86" y="52" width="34" height="34" fill="#273532" stroke="#9aa69f" stroke-width="1"/><text x="103.0" y="74.0" text-anchor="middle" font-size="14" fill="#ffffff">✕</text><rect x="18" y="86" width="34" height="34" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><text x="35.0" y="108.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="52" y="86" width="34" height="34" fill="url(#both)" stroke="#9aa69f" stroke-width="1"/><text x="69.0" y="108.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="86" y="86" width="34" height="34" fill="url(#both)" stroke="#9aa69f" stroke-width="1"/><text x="103.0" y="108.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><text x="35.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">0</text><text x="8" y="39.0" text-anchor="middle" font-size="10" fill="#6e7871">0</text><text x="69.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">1</text><text x="8" y="73.0" text-anchor="middle" font-size="10" fill="#6e7871">1</text><text x="103.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">2</text><text x="8" y="107.0" text-anchor="middle" font-size="10" fill="#6e7871">2</text></svg><figcaption>Example 1: grid [[0,1,−1],[1,0,−1],[1,1,1]], answer 5. ● = cherry, ✕ = thorn.
+  The shaded cells show one optimal pair of routes (A = orange, B = blue, shared = split).</figcaption></figure>
+  <figure><svg viewBox="0 0 122 122" width="122" height="122" class="fig"><defs><linearGradient id="both" x1="0" y1="0" x2="1" y2="1"><stop offset="50%" stop-color="#f6c9b6"/><stop offset="50%" stop-color="#bfdde7"/></linearGradient></defs><rect x="18" y="18" width="34" height="34" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><text x="35.0" y="40.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="52" y="18" width="34" height="34" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><text x="69.0" y="40.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="86" y="18" width="34" height="34" fill="#273532" stroke="#9aa69f" stroke-width="1"/><text x="103.0" y="40.0" text-anchor="middle" font-size="14" fill="#ffffff">✕</text><rect x="18" y="52" width="34" height="34" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><text x="35.0" y="74.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="52" y="52" width="34" height="34" fill="#273532" stroke="#9aa69f" stroke-width="1"/><text x="69.0" y="74.0" text-anchor="middle" font-size="14" fill="#ffffff">✕</text><rect x="86" y="52" width="34" height="34" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><text x="103.0" y="74.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="18" y="86" width="34" height="34" fill="#273532" stroke="#9aa69f" stroke-width="1"/><text x="35.0" y="108.0" text-anchor="middle" font-size="14" fill="#ffffff">✕</text><rect x="52" y="86" width="34" height="34" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><text x="69.0" y="108.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="86" y="86" width="34" height="34" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><text x="103.0" y="108.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><text x="35.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">0</text><text x="8" y="39.0" text-anchor="middle" font-size="10" fill="#6e7871">0</text><text x="69.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">1</text><text x="8" y="73.0" text-anchor="middle" font-size="10" fill="#6e7871">1</text><text x="103.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">2</text><text x="8" y="107.0" text-anchor="middle" font-size="10" fill="#6e7871">2</text></svg><figcaption>Example 2: grid [[1,1,−1],[1,−1,1],[−1,1,1]]. The thorns cut every
+  path from the start to the finish, so the answer is 0.</figcaption></figure>
+</div>
+
+<h2>2. Key ideas</h2>
+<h3>2.1 Why a greedy approach fails</h3>
+<p>A natural idea is to take the best single path to the corner, remove its cherries, and then take the best path back.
+This greedy strategy is <b>not optimal</b>, because the first path does not consider what the return trip can still reach.
+On the 7 × 7 grid below, greedy collects <b>14</b> cherries while the optimum is <b>15</b>
+(both values computed by our benchmark script). The two trips must therefore be planned <i>together</i>.</p>
+<div class="figs"><figure><svg viewBox="0 0 174 174" width="174" height="174" class="fig"><defs><linearGradient id="both" x1="0" y1="0" x2="1" y2="1"><stop offset="50%" stop-color="#f6c9b6"/><stop offset="50%" stop-color="#bfdde7"/></linearGradient></defs><rect x="18" y="18" width="22" height="22" fill="url(#both)" stroke="#9aa69f" stroke-width="1"/><text x="29.0" y="34.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="40" y="18" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><text x="51.0" y="34.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="62" y="18" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><text x="73.0" y="34.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="84" y="18" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><text x="95.0" y="34.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="106" y="18" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="128" y="18" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="150" y="18" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="18" y="40" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><rect x="40" y="40" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="62" y="40" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="84" y="40" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><text x="95.0" y="56.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="106" y="40" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="128" y="40" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="150" y="40" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="18" y="62" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><rect x="40" y="62" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="62" y="62" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="84" y="62" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><text x="95.0" y="78.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="106" y="62" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><rect x="128" y="62" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><rect x="150" y="62" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><text x="161.0" y="78.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="18" y="84" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><text x="29.0" y="100.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="40" y="84" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><rect x="62" y="84" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><rect x="84" y="84" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><text x="95.0" y="100.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="106" y="84" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="128" y="84" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="150" y="84" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><rect x="18" y="106" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="40" y="106" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="62" y="106" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="84" y="106" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><text x="95.0" y="122.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="106" y="106" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="128" y="106" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="150" y="106" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><rect x="18" y="128" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="40" y="128" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="62" y="128" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="84" y="128" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><text x="95.0" y="144.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="106" y="128" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="128" y="128" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="150" y="128" width="22" height="22" fill="#bfdde7" stroke="#9aa69f" stroke-width="1"/><rect x="18" y="150" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="40" y="150" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="62" y="150" width="22" height="22" fill="#ffffff" stroke="#9aa69f" stroke-width="1"/><rect x="84" y="150" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><text x="95.0" y="166.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="106" y="150" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><text x="117.0" y="166.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="128" y="150" width="22" height="22" fill="#f6c9b6" stroke="#9aa69f" stroke-width="1"/><text x="139.0" y="166.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><rect x="150" y="150" width="22" height="22" fill="url(#both)" stroke="#9aa69f" stroke-width="1"/><text x="161.0" y="166.0" text-anchor="middle" font-size="14" fill="#c0392b">●</text><text x="29.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">0</text><text x="8" y="33.0" text-anchor="middle" font-size="10" fill="#6e7871">0</text><text x="51.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">1</text><text x="8" y="55.0" text-anchor="middle" font-size="10" fill="#6e7871">1</text><text x="73.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">2</text><text x="8" y="77.0" text-anchor="middle" font-size="10" fill="#6e7871">2</text><text x="95.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">3</text><text x="8" y="99.0" text-anchor="middle" font-size="10" fill="#6e7871">3</text><text x="117.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">4</text><text x="8" y="121.0" text-anchor="middle" font-size="10" fill="#6e7871">4</text><text x="139.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">5</text><text x="8" y="143.0" text-anchor="middle" font-size="10" fill="#6e7871">5</text><text x="161.0" y="12" text-anchor="middle" font-size="10" fill="#6e7871">6</text><text x="8" y="165.0" text-anchor="middle" font-size="10" fill="#6e7871">6</text></svg><figcaption>Greedy counterexample. Planning both routes together (shaded)
+collects 15; greedy stops at 14.</figcaption></figure></div>
+
+<h3>2.2 Two walkers instead of a round trip</h3>
+<p>A path back from (n−1, n−1) to (0, 0) using left/up moves is the same set of cells as a path from (0, 0) to (n−1, n−1)
+using right/down moves. So the round trip is equivalent to <b>two walkers, A and B, that both start at (0, 0) and walk to
+(n−1, n−1) at the same time</b>, one step each per time unit. Both walks take exactly 2(n−1) steps.</p>
+
+<h3>2.3 State reduction: (step, row1, row2)</h3>
+<p>After <i>t</i> steps a walker at row <i>r</i> must be in column <i>c = t − r</i>, because every move increases
+<i>r + c</i> by exactly one. So instead of four coordinates (r1, c1, r2, c2) we only need
+<b>(t, r1, r2)</b>. All positions reachable at step <i>t</i> lie on the anti-diagonal <i>r + c = t</i>.</p>
+
+<h3>2.4 Counting a shared cell once</h3>
+<p>Because both walkers move in lock-step, they can only stand on the same cell at the same step. At step <i>t</i>,
+they are on the same cell exactly when r1 = r2. That cell’s cherry is added once. A cell visited by A at one step and by B at a
+<i>different</i> step is impossible, since a cell (r, c) is only reachable at step r + c. This is what makes the
+“at most once” rule easy to enforce.</p>
+
+<h3>2.5 Transitions</h3>
+<p>Each walker moves either down (row + 1) or right (row unchanged), giving four combined moves:
+(A↓, B↓), (A↓, B→), (A→, B↓), (A→, B→). A move is valid only if both new cells are inside the grid and are not thorns.
+The cherries gained by a move are</p>
+<pre>gain(t, r1, r2) = grid[r1][t − r1] + (grid[r2][t − r2]  if r1 ≠ r2  else 0)</pre>
+
+<h2>3. Approach 1 — Top-down DFS with memoization</h2>
+<h3>3.1 Recurrence</h3>
+<p>Let <b>F(t, r1, r2)</b> be the maximum number of cherries that can <i>still</i> be collected after the walkers are at
+(r1, t − r1) and (r2, t − r2). This is the <b>best future</b> from the state.</p>
+<pre>F(2n−2, n−1, n−1) = 0                                              (both walkers are at the finish)
+F(t, r1, r2)      = max over the 4 moves (d1, d2) that are valid of
+                        gain(t+1, r1+d1, r2+d2) + F(t+1, r1+d1, r2+d2)
+F(t, r1, r2)      = −∞   if no move is valid                            (dead end)
+
+answer = grid[0][0] + F(0, 0, 0),   or 0 if F(0, 0, 0) = −∞</pre>
+<p>The recursion is a depth-first search: it follows one sequence of moves all the way to the finish, returns the value, and
+backtracks to try the next move. Many different move sequences reach the same state, so each F value is stored in a
+dictionary keyed by (t, r1, r2) and reused. That turns an exponential search into a polynomial one.</p>
+
+<h3>3.2 Why the memo must store the <i>future</i>, not the running total</h3>
+<div class="box"><p>Our first version (<code>Cherry_DFS.py</code>) passed the number of cherries collected <i>so far</i> down the recursion and
+returned that running total at the finish, while memoizing by (t, r1, r2) only. The stored value then depended on
+<i>which path</i> first reached the state. A later path with a different running total reused a number that was wrong for it.
+For example, on the grid [[0,1,−1,−1],[0,1,0,1],[−1,1,0,1],[0,1,1,1]] it printed 6 instead of 8. Returning the best
+<b>future</b> (which depends only on the state) fixes this. The corrected version is the one presented in this report.</p></div>
+
+<h3>3.3 Algorithm</h3>
+<pre>function DFS(t, r1, r2):
+    if t = 2n − 2:                 return 0
+    if (t, r1, r2) in memo:        return memo[(t, r1, r2)]
+    best ← −∞
+    for (d1, d2) in {(1,1), (1,0), (0,1), (0,0)}:
+        a ← r1 + d1;  b ← r2 + d2;  s ← t + 1
+        if cells (a, s−a) and (b, s−b) are inside the grid and not thorns:
+            best ← max(best, gain(s, a, b) + DFS(s, a, b))
+    memo[(t, r1, r2)] ← best
+    return best
+
+answer ← max(0, grid[0][0] + DFS(0, 0, 0))</pre>
+
+<h2>4. Approach 2 — Bottom-up tabulation</h2>
+<h3>4.1 Recurrence</h3>
+<p>The bottom-up version fills the same state space forward in time. Let <b>G(t, r1, r2)</b> be the maximum number of
+cherries collected <i>so far</i> when A is at (r1, t − r1) and B is at (r2, t − r2). A state can be entered from the
+state at step t − 1 in which each walker was either one row up (it moved down) or in the same row (it moved right):</p>
+<pre>G(0, 0, 0)   = grid[0][0]
+G(t, r1, r2) = gain(t, r1, r2) + max( G(t−1, r1,   r2  ),     A→, B→
+                                      G(t−1, r1−1, r2  ),     A↓, B→
+                                      G(t−1, r1,   r2−1),     A→, B↓
+                                      G(t−1, r1−1, r2−1) )    A↓, B↓
+G(t, r1, r2) = −∞   if either cell is a thorn or all four predecessors are −∞
+
+answer = max(0, G(2n−2, n−1, n−1))</pre>
+<p>G is the “prefix” counterpart of F: for every state on an optimal route, G + F equals the answer.
+Both describe the same DP. They only differ in the direction the table is filled.</p>
+
+<h3>4.2 Filling order and the rolling array</h3>
+<p>G(t, ·, ·) depends only on G(t − 1, ·, ·), so the table is filled one step (one anti-diagonal) at a time, and only two
+n × n layers are kept: <code>previous</code> and <code>current</code>. For each step only rows
+max(0, t − n + 1) … min(n − 1, t) are valid, which skips impossible cells.</p>
+
+<h3>4.3 Worked example (Example 1)</h3>
+<p>The layers below are produced by the algorithm for Example 1. Hatched cells are rows that cannot occur at that step,
+and −∞ marks unreachable pairs (a thorn or no valid predecessor). The final layer’s corner value is the answer,
+<b>5</b>. The tables are symmetric because swapping A and B gives the same situation.</p>
+<div class="layers"><div class="layer-box"><div class="layer-title">step 0</div><table class="layer"><tr><th>r1\r2</th><th>0</th><th>1</th><th>2</th></tr><tr><th>0</th><td class="val">0</td><td class="off"></td><td class="off"></td></tr><tr><th>1</th><td class="off"></td><td class="off"></td><td class="off"></td></tr><tr><th>2</th><td class="off"></td><td class="off"></td><td class="off"></td></tr></table></div><div class="layer-box"><div class="layer-title">step 1</div><table class="layer"><tr><th>r1\r2</th><th>0</th><th>1</th><th>2</th></tr><tr><th>0</th><td class="val">1</td><td class="val">2</td><td class="off"></td></tr><tr><th>1</th><td class="val">2</td><td class="val">1</td><td class="off"></td></tr><tr><th>2</th><td class="off"></td><td class="off"></td><td class="off"></td></tr></table></div><div class="layer-box"><div class="layer-title">step 2</div><table class="layer"><tr><th>r1\r2</th><th>0</th><th>1</th><th>2</th></tr><tr><th>0</th><td class="neg">−∞</td><td class="neg">−∞</td><td class="neg">−∞</td></tr><tr><th>1</th><td class="neg">−∞</td><td class="val">2</td><td class="val">3</td></tr><tr><th>2</th><td class="neg">−∞</td><td class="val">3</td><td class="val">2</td></tr></table></div><div class="layer-box"><div class="layer-title">step 3</div><table class="layer"><tr><th>r1\r2</th><th>0</th><th>1</th><th>2</th></tr><tr><th>0</th><td class="off"></td><td class="off"></td><td class="off"></td></tr><tr><th>1</th><td class="off"></td><td class="neg">−∞</td><td class="neg">−∞</td></tr><tr><th>2</th><td class="off"></td><td class="neg">−∞</td><td class="val">4</td></tr></table></div><div class="layer-box"><div class="layer-title">step 4</div><table class="layer"><tr><th>r1\r2</th><th>0</th><th>1</th><th>2</th></tr><tr><th>0</th><td class="off"></td><td class="off"></td><td class="off"></td></tr><tr><th>1</th><td class="off"></td><td class="off"></td><td class="off"></td></tr><tr><th>2</th><td class="off"></td><td class="off"></td><td class="val">5</td></tr></table></div></div>
+<p class="small">For example, G(2, 1, 2) puts A on (1, 1) and B on (2, 0). Its four candidates are
+G(1, 1, 2) = −∞, G(1, 0, 2) = −∞ (row 2 does not exist at step 1), G(1, 1, 1) = 1 and
+G(1, 0, 1) = 2. The best is 2, and the walkers add
+0 + 1 cherries, so G(2, 1, 2) = 3.</p>
+
+<h2>5. Complexity analysis</h2>
+<h3>5.1 Number of states</h3>
+<p>t ranges over 0 … 2n − 2 (2n − 1 values) and r1, r2 over 0 … n − 1, so there are at most (2n − 1)·n² states. Only rows
+in the valid range for each step count. If k<sub>t</sub> = min(t, 2n − 2 − t) + 1 is the length of anti-diagonal t, the exact
+number of pairs is Σ<sub>t</sub> k<sub>t</sub><sup>2</sup> = (2n³ + n)/3 ≈ (2/3)n³. For n = 50 this is
+83,350, which matches the 83,349 cells computed by the bottom-up solution on the
+open 50 × 50 grid.</p>
+
+<h3>5.2 Approach 1 — top-down</h3>
+<ul>
+<li><b>Time: Θ(n³).</b> Each state is solved once. Its body tries 4 moves in O(1) time each, and every later visit is an O(1)
+memo lookup. The number of <code>dfs</code> calls is at most 4·(number of states) + 1. On the open 50 × 50 grid we measured
+323,401 calls ≈ 4 × 83,349.</li>
+<li><b>Space: Θ(n³)</b> for the memo dictionary (one entry per solved state) <b>+ O(n)</b> for the recursion stack. The
+depth is at most 2n − 1 = 99 frames, well within Python’s default limit of 1000.</li>
+</ul>
+<h3>5.3 Approach 2 — bottom-up</h3>
+<ul>
+<li><b>Time: Θ(n³).</b> There are 2n − 1 layers, at most n² cells per layer, and 4 predecessor lookups per cell, all O(1).</li>
+<li><b>Space: Θ(n²).</b> Only two n × n layers are stored. The full 3-D table is never materialized.</li>
+</ul>
+<h3>5.4 Brute force for reference</h3>
+<p>A single monotone path from corner to corner is a choice of which n − 1 of the 2n − 2 moves go down, giving
+C(2n − 2, n − 1) paths, so trying every pair costs Θ(C(2n−2, n−1)² · n) ≈ Θ(16ⁿ / √n). For n = 50, C(98, 49) ≈
+2.55e+28, so there are about 6.5e+56 pairs. That is infeasible, while the DP needs only about 83,000 states.</p>
+
+<table>
+<tr><th></th><th>Brute force</th><th>Top-down DFS + memo</th><th>Bottom-up tabulation</th></tr>
+<tr><td>Time</td><td>Θ(C(2n−2, n−1)² · n)</td><td>Θ(n³)</td><td>Θ(n³)</td></tr>
+<tr><td>Extra space</td><td>Θ(n)</td><td>Θ(n³) memo + Θ(n) stack</td><td>Θ(n²)</td></tr>
+<tr><td>n = 50</td><td>≈ 6e+56 path pairs</td><td>≈ 83 k states, 323 k calls</td><td>≈ 83 k cells</td></tr>
+</table>
+
+<h2>6. Comparison of the two approaches</h2>
+<h3>6.1 Side by side</h3>
+<table>
+<tr><th style="width:22%">Aspect</th><th>Top-down DFS + memoization</th><th>Bottom-up tabulation</th></tr>
+<tr><td>Value stored</td><td>F = best <b>future</b> from a state</td><td>G = best <b>so far</b> at a state</td></tr>
+<tr><td>Direction</td><td>From the start, recursing towards the finish; values return backwards</td><td>Layer by layer from step 0 to step 2n − 2</td></tr>
+<tr><td>Order of evaluation</td><td>Automatic: the recursion discovers what it needs</td><td>Must be chosen by hand (by step)</td></tr>
+<tr><td>States computed</td><td>Only states reachable from the start without thorns</td><td>Every non-thorn pair on each anti-diagonal, including unreachable ones</td></tr>
+<tr><td>Time</td><td>Θ(n³), with a larger constant: function calls, dict hashing of tuples</td><td>Θ(n³), with a small constant: list indexing in loops</td></tr>
+<tr><td>Space</td><td>Θ(n³) memo + Θ(n) call stack</td><td>Θ(n²) with two rolling layers</td></tr>
+<tr><td>Risk</td><td>Recursion depth; memoizing a path-dependent value (see 3.2)</td><td>Boundary / index errors when reading row − 1</td></tr>
+<tr><td>Recovering the route</td><td>Easy: follow the move that achieved each max</td><td>Needs parent pointers, or the full 3-D table</td></tr>
+<tr><td>Ease of writing</td><td>Follows the recurrence directly; easiest to get right first</td><td>Needs more thought about order and bounds</td></tr>
+</table>
+
+<h3>6.2 Experimental results</h3>
+<p>Both solutions were run on the same machine (Python 3.14.6), timed with <code>time.perf_counter</code>
+(median of 3–5 runs) and measured with <code>tracemalloc</code> for peak extra memory. “Open” grids contain only cherries
+(no thorns), which is the worst case because every state is reachable. “Random” grids have about 15% thorns and 50% cherries.
+The script is <code>benchmark.py</code>.</p>
+<div class="figs"><figure><svg viewBox="0 0 318 210" width="318" height="210" class="chart"><text x="48" y="14" font-size="11" font-weight="700">Running time, open grid (worst case)</text><line x1="48" x2="306" y1="176.0" y2="176.0" stroke="#e3e6df"/><text x="43" y="179.0" font-size="9" text-anchor="end" fill="#6e7871">0</text><line x1="48" x2="306" y1="151.98050275619792" y2="151.98050275619792" stroke="#e3e6df"/><text x="43" y="154.98050275619792" font-size="9" text-anchor="end" fill="#6e7871">20</text><line x1="48" x2="306" y1="127.96100551239586" y2="127.96100551239586" stroke="#e3e6df"/><text x="43" y="130.96100551239584" font-size="9" text-anchor="end" fill="#6e7871">40</text><line x1="48" x2="306" y1="103.9415082685938" y2="103.9415082685938" stroke="#e3e6df"/><text x="43" y="106.9415082685938" font-size="9" text-anchor="end" fill="#6e7871">60</text><line x1="48" x2="306" y1="79.92201102479171" y2="79.92201102479171" stroke="#e3e6df"/><text x="43" y="82.92201102479171" font-size="9" text-anchor="end" fill="#6e7871">80</text><line x1="48" x2="306" y1="55.902513780989636" y2="55.902513780989636" stroke="#e3e6df"/><text x="43" y="58.902513780989636" font-size="9" text-anchor="end" fill="#6e7871">100</text><line x1="48" x2="306" y1="31.883016537187586" y2="31.883016537187586" stroke="#e3e6df"/><text x="43" y="34.883016537187586" font-size="9" text-anchor="end" fill="#6e7871">120</text><text x="48.0" y="189" font-size="9" text-anchor="middle" fill="#6e7871">5</text><text x="76.66666666666666" y="189" font-size="9" text-anchor="middle" fill="#6e7871">10</text><text x="134.0" y="189" font-size="9" text-anchor="middle" fill="#6e7871">20</text><text x="191.33333333333334" y="189" font-size="9" text-anchor="middle" fill="#6e7871">30</text><text x="248.66666666666666" y="189" font-size="9" text-anchor="middle" fill="#6e7871">40</text><text x="306.0" y="189" font-size="9" text-anchor="middle" fill="#6e7871">50</text><text x="177.0" y="204" font-size="9" text-anchor="middle" fill="#6e7871">grid size n</text><text x="11" y="101.0" font-size="9" text-anchor="middle" fill="#6e7871" transform="rotate(-90 11 101.0)">time (ms)</text><path d="M48.0,175.9 L76.7,175.0 L105.3,171.2 L134.0,167.5 L162.7,159.5 L191.3,146.5 L220.0,128.8 L248.7,107.3 L277.3,77.1 L306.0,37.1" fill="none" stroke="#e56f45" stroke-width="2"/><circle cx="48.0" cy="175.9" r="2.3" fill="#e56f45"/><circle cx="76.7" cy="175.0" r="2.3" fill="#e56f45"/><circle cx="105.3" cy="171.2" r="2.3" fill="#e56f45"/><circle cx="134.0" cy="167.5" r="2.3" fill="#e56f45"/><circle cx="162.7" cy="159.5" r="2.3" fill="#e56f45"/><circle cx="191.3" cy="146.5" r="2.3" fill="#e56f45"/><circle cx="220.0" cy="128.8" r="2.3" fill="#e56f45"/><circle cx="248.7" cy="107.3" r="2.3" fill="#e56f45"/><circle cx="277.3" cy="77.1" r="2.3" fill="#e56f45"/><circle cx="306.0" cy="37.1" r="2.3" fill="#e56f45"/><rect x="56" y="26" width="10" height="3" fill="#e56f45"/><text x="70" y="30" font-size="9">top-down DFS + memo</text><path d="M48.0,176.0 L76.7,175.8 L105.3,175.2 L134.0,174.5 L162.7,173.3 L191.3,171.1 L220.0,168.4 L248.7,165.0 L277.3,160.5 L306.0,154.1" fill="none" stroke="#4b91a5" stroke-width="2"/><circle cx="48.0" cy="176.0" r="2.3" fill="#4b91a5"/><circle cx="76.7" cy="175.8" r="2.3" fill="#4b91a5"/><circle cx="105.3" cy="175.2" r="2.3" fill="#4b91a5"/><circle cx="134.0" cy="174.5" r="2.3" fill="#4b91a5"/><circle cx="162.7" cy="173.3" r="2.3" fill="#4b91a5"/><circle cx="191.3" cy="171.1" r="2.3" fill="#4b91a5"/><circle cx="220.0" cy="168.4" r="2.3" fill="#4b91a5"/><circle cx="248.7" cy="165.0" r="2.3" fill="#4b91a5"/><circle cx="277.3" cy="160.5" r="2.3" fill="#4b91a5"/><circle cx="306.0" cy="154.1" r="2.3" fill="#4b91a5"/><rect x="181" y="26" width="10" height="3" fill="#4b91a5"/><text x="195" y="30" font-size="9">bottom-up table</text></svg></figure><figure><svg viewBox="0 0 318 210" width="318" height="210" class="chart"><text x="48" y="14" font-size="11" font-weight="700">Peak extra memory (log scale)</text><line x1="48" x2="306" y1="176.0" y2="176.0" stroke="#e3e6df"/><text x="43" y="179.0" font-size="9" text-anchor="end" fill="#6e7871">0.1</text><line x1="48" x2="306" y1="146.0" y2="146.0" stroke="#e3e6df"/><text x="43" y="149.0" font-size="9" text-anchor="end" fill="#6e7871">1</text><line x1="48" x2="306" y1="116.0" y2="116.0" stroke="#e3e6df"/><text x="43" y="119.0" font-size="9" text-anchor="end" fill="#6e7871">10</text><line x1="48" x2="306" y1="86.0" y2="86.0" stroke="#e3e6df"/><text x="43" y="89.0" font-size="9" text-anchor="end" fill="#6e7871">100</text><line x1="48" x2="306" y1="56.0" y2="56.0" stroke="#e3e6df"/><text x="43" y="59.0" font-size="9" text-anchor="end" fill="#6e7871">1000</text><line x1="48" x2="306" y1="26.0" y2="26.0" stroke="#e3e6df"/><text x="43" y="29.0" font-size="9" text-anchor="end" fill="#6e7871">10000</text><text x="48.0" y="189" font-size="9" text-anchor="middle" fill="#6e7871">5</text><text x="76.66666666666666" y="189" font-size="9" text-anchor="middle" fill="#6e7871">10</text><text x="134.0" y="189" font-size="9" text-anchor="middle" fill="#6e7871">20</text><text x="191.33333333333334" y="189" font-size="9" text-anchor="middle" fill="#6e7871">30</text><text x="248.66666666666666" y="189" font-size="9" text-anchor="middle" fill="#6e7871">40</text><text x="306.0" y="189" font-size="9" text-anchor="middle" fill="#6e7871">50</text><text x="177.0" y="204" font-size="9" text-anchor="middle" fill="#6e7871">grid size n</text><text x="11" y="101.0" font-size="9" text-anchor="middle" fill="#6e7871" transform="rotate(-90 11 101.0)">memory (KB)</text><path d="M48.0,128.0 L76.7,99.1 L105.3,75.0 L134.0,68.6 L162.7,57.6 L191.3,48.0 L220.0,40.1 L248.7,37.0 L277.3,30.8 L306.0,28.2" fill="none" stroke="#e56f45" stroke-width="2"/><circle cx="48.0" cy="128.0" r="2.3" fill="#e56f45"/><circle cx="76.7" cy="99.1" r="2.3" fill="#e56f45"/><circle cx="105.3" cy="75.0" r="2.3" fill="#e56f45"/><circle cx="134.0" cy="68.6" r="2.3" fill="#e56f45"/><circle cx="162.7" cy="57.6" r="2.3" fill="#e56f45"/><circle cx="191.3" cy="48.0" r="2.3" fill="#e56f45"/><circle cx="220.0" cy="40.1" r="2.3" fill="#e56f45"/><circle cx="248.7" cy="37.0" r="2.3" fill="#e56f45"/><circle cx="277.3" cy="30.8" r="2.3" fill="#e56f45"/><circle cx="306.0" cy="28.2" r="2.3" fill="#e56f45"/><rect x="56" y="26" width="10" height="3" fill="#e56f45"/><text x="70" y="30" font-size="9">top-down DFS + memo</text><path d="M48.0,152.8 L76.7,137.6 L105.3,128.4 L134.0,121.2 L162.7,115.6 L191.3,111.0 L220.0,107.1 L248.7,103.6 L277.3,100.3 L306.0,97.5" fill="none" stroke="#4b91a5" stroke-width="2"/><circle cx="48.0" cy="152.8" r="2.3" fill="#4b91a5"/><circle cx="76.7" cy="137.6" r="2.3" fill="#4b91a5"/><circle cx="105.3" cy="128.4" r="2.3" fill="#4b91a5"/><circle cx="134.0" cy="121.2" r="2.3" fill="#4b91a5"/><circle cx="162.7" cy="115.6" r="2.3" fill="#4b91a5"/><circle cx="191.3" cy="111.0" r="2.3" fill="#4b91a5"/><circle cx="220.0" cy="107.1" r="2.3" fill="#4b91a5"/><circle cx="248.7" cy="103.6" r="2.3" fill="#4b91a5"/><circle cx="277.3" cy="100.3" r="2.3" fill="#4b91a5"/><circle cx="306.0" cy="97.5" r="2.3" fill="#4b91a5"/><rect x="181" y="26" width="10" height="3" fill="#4b91a5"/><text x="195" y="30" font-size="9">bottom-up table</text></svg></figure></div>
+<table class="perf">
+<tr><th rowspan="2">n</th><th rowspan="2">answer</th><th colspan="3">Top-down DFS + memo</th><th colspan="3">Bottom-up tabulation</th></tr>
+<tr><th>dfs calls</th><th>time (ms)</th><th>peak mem (KB)</th><th>cells</th><th>time (ms)</th><th>peak mem (KB)</th></tr>
+<tr><td>5</td><td>16</td><td>241</td><td>0.09</td><td>4.0</td><td>84</td><td>0.02</td><td>0.6</td></tr><tr><td>10</td><td>36</td><td>2,281</td><td>0.83</td><td>36.5</td><td>669</td><td>0.17</td><td>1.9</td></tr><tr><td>15</td><td>56</td><td>8,121</td><td>3.96</td><td>231.8</td><td>2,254</td><td>0.67</td><td>3.9</td></tr><tr><td>20</td><td>76</td><td>19,761</td><td>7.11</td><td>380.4</td><td>5,339</td><td>1.23</td><td>6.7</td></tr><tr><td>25</td><td>96</td><td>39,201</td><td>13.70</td><td>882.1</td><td>10,424</td><td>2.27</td><td>10.3</td></tr><tr><td>30</td><td>116</td><td>68,441</td><td>24.53</td><td>1,844.6</td><td>18,009</td><td>4.07</td><td>14.6</td></tr><tr><td>35</td><td>136</td><td>109,481</td><td>39.31</td><td>3,395.7</td><td>28,594</td><td>6.29</td><td>19.9</td></tr><tr><td>40</td><td>156</td><td>164,321</td><td>57.17</td><td>4,283.7</td><td>42,679</td><td>9.13</td><td>25.9</td></tr><tr><td>45</td><td>176</td><td>234,961</td><td>82.33</td><td>6,918.6</td><td>60,764</td><td>12.90</td><td>33.2</td></tr><tr><td>50</td><td>196</td><td>323,401</td><td>115.65</td><td>8,423.7</td><td>83,349</td><td>18.23</td><td>41.2</td></tr>
+</table>
+<p class="small">Table: open grids (worst case).</p>
+<table class="perf">
+<tr><th rowspan="2">n</th><th rowspan="2">answer</th><th colspan="3">Top-down DFS + memo</th><th colspan="3">Bottom-up tabulation</th></tr>
+<tr><th>dfs calls</th><th>time (ms)</th><th>peak mem (KB)</th><th>cells</th><th>time (ms)</th><th>peak mem (KB)</th></tr>
+<tr><td>5</td><td>8</td><td>120</td><td>0.06</td><td>4.7</td><td>60</td><td>0.02</td><td>0.6</td></tr><tr><td>10</td><td>29</td><td>1,149</td><td>0.49</td><td>55.3</td><td>497</td><td>0.23</td><td>1.9</td></tr><tr><td>15</td><td>40</td><td>2,531</td><td>1.01</td><td>55.3</td><td>1,765</td><td>0.45</td><td>3.9</td></tr><tr><td>20</td><td>62</td><td>7,000</td><td>2.94</td><td>424.9</td><td>3,540</td><td>0.96</td><td>6.7</td></tr><tr><td>25</td><td>80</td><td>5,278</td><td>2.13</td><td>218.7</td><td>7,446</td><td>1.63</td><td>10.3</td></tr><tr><td>30</td><td>90</td><td>14,370</td><td>6.39</td><td>874.0</td><td>12,392</td><td>3.03</td><td>14.6</td></tr><tr><td>35</td><td>115</td><td>39,034</td><td>16.37</td><td>1,553.2</td><td>19,854</td><td>5.06</td><td>19.9</td></tr><tr><td>40</td><td>128</td><td>38,339</td><td>15.51</td><td>1,732.0</td><td>30,248</td><td>6.94</td><td>25.9</td></tr><tr><td>45</td><td>135</td><td>75,498</td><td>31.32</td><td>3,687.4</td><td>43,369</td><td>10.45</td><td>33.2</td></tr><tr><td>50</td><td>156</td><td>105,540</td><td>41.45</td><td>4,305.7</td><td>61,498</td><td>14.04</td><td>41.2</td></tr>
+</table>
+<p class="small">Table: random grids (≈ 15% thorns).</p>
+
+<h3>6.3 Discussion</h3>
+<ul>
+<li><b>Both grow as n³.</b> From n = 25 to n = 50 (n doubles), the open-grid time grows by
+8.4× (top-down) and
+8.0× (bottom-up), close to the 2³ = 8× predicted
+by Θ(n³).</li>
+<li><b>Bottom-up is faster in practice</b>, about 6.3× at n = 50 on the open grid. Both do Θ(n³) work, but a Python
+function call plus a tuple-keyed dictionary lookup is much more expensive than indexing a list inside a loop.</li>
+<li><b>Bottom-up uses far less memory</b>: 41 KB against 8,424 KB at
+n = 50, about 204× less. This matches Θ(n²) against Θ(n³). The memo dictionary also stores a tuple key per entry.</li>
+<li><b>Top-down benefits from thorns.</b> On random grids, the top-down search only reaches states connected to the start, so
+its gap to bottom-up shrinks. At n = 50 the ratio drops from 6.3× to
+3.0×. Bottom-up still evaluates every non-thorn pair
+on each diagonal.</li>
+<li><b>Both are fast enough.</b> With n ≤ 50 the worst case is about 83,000 states, so both solutions finish in well under a
+second, far inside LeetCode’s time limit.</li>
+</ul>
+
+<h2>7. Testing and online-judge submission</h2>
+<ul>
+<li><b>Brute-force cross-check.</b> Both solutions were compared with an exhaustive search over every pair of paths on 3,000
+random grids (n = 1 … 5, about 20% thorns). Result: 6,000 checks and
+<b>0 mismatches</b>.</li>
+<li><b>LeetCode examples.</b> Example 1 → 5 / 5 (expected 5);
+Example 2 → 0 / 0 (expected 0).</li>
+<li><b>Agreement.</b> On every benchmark grid (n up to 50) the two solutions returned the same answer.</li>
+</ul>
+<table>
+<tr><th>LeetCode submission</th><th>Status</th><th>Runtime</th><th>Memory</th></tr>
+<tr><td>Approach 1 — top-down DFS + memoization</td><td><span class="ph">[Accepted]</span></td><td><span class="ph">[__ ms]</span></td><td><span class="ph">[__ MB]</span></td></tr>
+<tr><td>Approach 2 — bottom-up tabulation</td><td><span class="ph">[Accepted]</span></td><td><span class="ph">[__ ms]</span></td><td><span class="ph">[__ MB]</span></td></tr>
+</table>
+<p class="small">Screenshots of the accepted submissions are submitted as separate files.</p>
+
+<h2>8. Visualization tool</h2>
+<p>To explain both algorithms in the presentation, we built an interactive web application (Next.js / React).</p>
+<ul>
+<li><b>DFS + memoization page.</b> The recursion tree grows one call at a time. It highlights the current call, the calls waiting on
+the stack, memo hits, base cases and dead ends, and shows each return as “max(gain + future, …)”. At the end it highlights the
+best route in the tree and on the grid.</li>
+<li><b>Bottom-up page.</b> Shows the <code>previous → current</code> layers, the four candidate cells for each entry, the formula
+being evaluated, and the matching line of Python code. It has a <i>predict mode</i> in which the viewer fills in each cell
+before it is revealed.</li>
+</ul>
+
+<h2>9. Conclusion</h2>
+<p>Cherry Pickup looks like two separate path problems, but the trips interact through shared cherries, so greedy fails.
+Modelling the round trip as two walkers moving together, and using the fact that a walker’s column is determined by the step
+and its row, reduces the state to (step, row1, row2) and gives an O(n³) dynamic program. We implemented it both ways. The
+top-down version maps directly onto the recurrence and only explores reachable states. The bottom-up version has the same
+Θ(n³) time but a smaller constant factor, and it needs only Θ(n²) memory thanks to the rolling layers. In our measurements
+it was about 6× faster and used about 204× less memory at n = 50. We also learned that the value a memo
+stores must depend only on the state. Otherwise memoization silently returns wrong answers.</p>
+
+<h2>10. AI usage disclosure</h2>
+<div class="box blue">
+<p><b>Tool used.</b> Claude Code, Anthropic’s AI coding assistant (model: Claude Opus 5.5), used in the terminal inside our
+project folder.</p>
+<p><b>How it assisted us.</b></p>
+<ul>
+<li>Explained how to run our visualization project and explained the DFS + memoization technique used in it.</li>
+<li>Found the memoization bug in our original top-down code (<code>Cherry_DFS.py</code>) and in the visualization, and
+wrote the corrected top-down solution (<code>cherry_pickup_dfs_memo.py</code>).</li>
+<li>Wrapped our bottom-up solution in the LeetCode <code>Solution</code> class format with a local test driver
+(<code>cherry_pickup_bottom_up.py</code>). The algorithm itself is unchanged.</li>
+<li>Built the interactive pages of the visualization tool: the bottom-up table page, the step-by-step recursion tree, and
+route highlighting.</li>
+<li>Wrote the benchmark / brute-force testing script (<code>benchmark.py</code>) and drafted this report, including the
+complexity analysis and the comparison of the two approaches.</li>
+</ul>
+<p><b>What we did ourselves.</b> <span class="ph">[Describe your own contributions, e.g. choosing the problem, writing the original DFS and bottom-up code, designing the visualization, reviewing and editing the report, submitting to LeetCode, preparing the presentation.]</span></p>
+<p><b>Responsibility.</b> We have reviewed, tested and understood all code and text in this submission, including every part
+produced with AI assistance, and we take full responsibility for the final output.</p>
+<p>Signed: <span class="ph">[Name 1]</span> (<span class="ph">[Student ID 1]</span>), <span class="ph">[Name 2]</span> (<span class="ph">[Student ID 2]</span>), <span class="ph">[Name 3]</span> (<span class="ph">[Student ID 3]</span>)</p>
+</div>
+
+<h2>References</h2>
+<ol>
+<li>LeetCode, “741. Cherry Pickup”. https://leetcode.com/problems/cherry-pickup/</li>
+<li>T. H. Cormen, C. E. Leiserson, R. L. Rivest, C. Stein. <i>Introduction to Algorithms</i>, 4th ed., MIT Press, 2022 — Chapter 14, Dynamic Programming.</li>
+<li>J. Kleinberg, É. Tardos. <i>Algorithm Design</i>, Pearson, 2006 — Chapter 6, Dynamic Programming.</li>
+</ol>
+
+<h2 class="page-break">Appendix A — cherry_pickup_dfs_memo.py</h2>
+<pre class="code">&quot;&quot;&quot;
+Cherry Pickup (LeetCode 741) - Approach 1: top-down DFS with memoization
+
+Team members:
+    [Name 1] - [Student ID 1]
+    [Name 2] - [Student ID 2]
+    [Name 3] - [Student ID 3]
+
+Idea: the round trip is modelled as two walkers A and B moving from (0, 0)
+to (n-1, n-1) at the same time. After `step` moves a walker at row r stands
+in column step - r, so the state is (step, row1, row2).
+
+dfs(state) returns the BEST FUTURE: the most cherries that can still be
+collected after this state. That value does not depend on how the walkers got
+there, which is what makes it safe to memoize by (step, row1, row2).
+
+Time  O(n^3): at most (2n-1) * n * n states, 4 moves each.
+Space O(n^3) for the memo table, O(n) recursion depth.
+&quot;&quot;&quot;
+
+import sys
+import time
+from typing import List
+
+MOVES = [(1, 1), (1, 0), (0, 1), (0, 0)]  # (d_row1, d_row2): 1 = down, 0 = right
+
+
+class Solution:
+    def cherryPickup(self, grid: List[List[int]]) -&gt; int:
+        n = len(grid)
+        last_step = 2 * (n - 1)
+        memo = {}
+        self.state_count = 0
+
+        def valid(row1, row2, step):
+            col1 = step - row1
+            col2 = step - row2
+            if row1 &gt;= n or col1 &gt;= n or row2 &gt;= n or col2 &gt;= n:
+                return False
+            return grid[row1][col1] != -1 and grid[row2][col2] != -1
+
+        def dfs(step, row1, row2):
+            self.state_count += 1
+            if step == last_step:
+                return 0  # both walkers are on (n-1, n-1): nothing left
+
+            key = (step, row1, row2)
+            if key in memo:
+                return memo[key]
+
+            best = float(&quot;-inf&quot;)
+            next_step = step + 1
+            for dr1, dr2 in MOVES:
+                nr1, nr2 = row1 + dr1, row2 + dr2
+                if not valid(nr1, nr2, next_step):
+                    continue
+                gain = grid[nr1][next_step - nr1]
+                if nr1 != nr2:  # same row on the same step = same cell
+                    gain += grid[nr2][next_step - nr2]
+                best = max(best, gain + dfs(next_step, nr1, nr2))
+
+            memo[key] = best
+            return best
+
+        future = dfs(0, 0, 0)
+        if future == float(&quot;-inf&quot;):
+            return 0  # no route reaches the finish
+        return grid[0][0] + future
+
+
+if __name__ == &quot;__main__&quot;:
+    # Input: n, then n rows of n integers (same format as Cherry_DFS.py).
+    sys.setrecursionlimit(10000)
+    n = int(input())
+    grid = [list(map(int, input().split())) for _ in range(n)]
+
+    solver = Solution()
+    t0 = time.perf_counter()
+    answer = solver.cherryPickup(grid)
+    t1 = time.perf_counter()
+
+    print(answer)
+    print(&quot;state count =&quot;, solver.state_count)
+    print(&quot;time taken  = %.6f sec&quot; % (t1 - t0))
+</pre>
+<h2 class="page-break">Appendix B — cherry_pickup_bottom_up.py</h2>
+<pre class="code">&quot;&quot;&quot;
+Cherry Pickup (LeetCode 741) - Approach 2: bottom-up tabulation
+
+Team members:
+    [Name 1] - [Student ID 1]
+    [Name 2] - [Student ID 2]
+    [Name 3] - [Student ID 3]
+
+Idea: same two-walker state (step, row1, row2) as the top-down version, but
+the table is filled forward one step (anti-diagonal) at a time, with no
+recursion. previous[row1][row2] holds the most cherries collected so far when
+walker A is in row1 and walker B is in row2. Only the previous layer is
+needed to build the current one, so two n x n tables are enough.
+
+Time  O(n^3): (2n-1) layers, n * n cells each, 4 predecessors per cell.
+Space O(n^2): two n x n layers.
+&quot;&quot;&quot;
+
+import time
+from typing import List
+
+
+class Solution:
+    def cherryPickup(self, grid: List[List[int]]) -&gt; int:
+        n = len(grid)
+        negative_infinity = float(&quot;-inf&quot;)
+        self.state_count = 0
+
+        # At step 0, both walkers are at (0, 0)
+        previous = [[negative_infinity] * n for _ in range(n)]
+        previous[0][0] = grid[0][0]
+
+        # Both walkers need 2(n - 1) steps to reach the destination
+        for step in range(1, 2 * n - 1):
+            current = [[negative_infinity] * n for _ in range(n)]
+
+            minimum_row = max(0, step - (n - 1))
+            maximum_row = min(n - 1, step)
+
+            for row1 in range(minimum_row, maximum_row + 1):
+                column1 = step - row1
+
+                if grid[row1][column1] == -1:
+                    continue
+
+                for row2 in range(minimum_row, maximum_row + 1):
+                    column2 = step - row2
+
+                    if grid[row2][column2] == -1:
+                        continue
+
+                    self.state_count += 1
+                    best_previous = previous[row1][row2]
+
+                    if row1 &gt; 0:
+                        best_previous = max(best_previous, previous[row1 - 1][row2])
+
+                    if row2 &gt; 0:
+                        best_previous = max(best_previous, previous[row1][row2 - 1])
+
+                    if row1 &gt; 0 and row2 &gt; 0:
+                        best_previous = max(
+                            best_previous, previous[row1 - 1][row2 - 1]
+                        )
+
+                    if best_previous == negative_infinity:
+                        continue
+
+                    cherries = grid[row1][column1]
+
+                    # Count the second cell only when positions differ
+                    if row1 != row2:
+                        cherries += grid[row2][column2]
+
+                    current[row1][row2] = best_previous + cherries
+
+            previous = current
+
+        return max(0, previous[n - 1][n - 1])
+
+
+if __name__ == &quot;__main__&quot;:
+    # Input: n, then n rows of n integers.
+    n = int(input())
+    grid = [list(map(int, input().split())) for _ in range(n)]
+
+    solver = Solution()
+    t0 = time.perf_counter()
+    answer = solver.cherryPickup(grid)
+    t1 = time.perf_counter()
+
+    print(answer)
+    print(&quot;cells computed =&quot;, solver.state_count)
+    print(&quot;time taken     = %.6f sec&quot; % (t1 - t0))
+</pre>
+</body></html>
