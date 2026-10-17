@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import MethodNav from "../method-nav";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { PRESETS, type Grid } from "../presets";
 
 type Table = number[][];
@@ -28,6 +29,7 @@ type TableEvent = {
   value: number;
 };
 type Answer = { guess: string; correct: boolean };
+type PositionGuess = { a: boolean; b: boolean; feedback: string; hint: boolean };
 type Parent = [number, number] | null;
 
 const NEG = Number.NEGATIVE_INFINITY;
@@ -344,6 +346,41 @@ function needsAnswer(event: TableEvent) {
   return event.kind === "fill" || event.kind === "unreachable";
 }
 
+function CellAnswer({ event, onCorrect, onFeedback }: {
+  event: TableEvent;
+  onCorrect: (answer: string) => void;
+  onFeedback: (message: string) => void;
+}) {
+  const [value, setValue] = useState("");
+  const [feedback, updateFeedback] = useState("");
+  const setFeedback = (message: string) => { updateFeedback(message); onFeedback(message); };
+  return (
+    <form id="cell-answer-form" className="tb-cell-form" onSubmit={(e) => {
+      e.preventDefault();
+      const text = value.trim().toLowerCase();
+      const parsed = ["-inf", "inf", "−∞", "-∞"].includes(text) ? NEG : Number(text);
+      if (!text || (parsed !== NEG && !Number.isFinite(parsed))) {
+        setFeedback("Enter a number, or -inf for an unreachable cell.");
+      } else if (parsed !== event.value) {
+        setFeedback("Try again: take the largest reachable previous value and add the new cherries. Count a shared cell only once. If all previous values are −∞, enter -inf.");
+      } else {
+        onCorrect(text);
+      }
+    }}>
+      <input
+        aria-label={`Fill current row ${event.row1}, column ${event.row2}`}
+        aria-describedby="cell-answer-instructions cell-answer-feedback"
+        aria-invalid={feedback ? true : undefined}
+        autoFocus
+        autoComplete="off"
+        placeholder="?"
+        value={value}
+        onChange={(e) => { setValue(e.target.value); setFeedback(""); }}
+      />
+    </form>
+  );
+}
+
 function DpTable({
   table,
   n,
@@ -352,6 +389,7 @@ function DpTable({
   mode,
   hidden,
   revealBest = true,
+  answerInput,
 }: {
   table: Table;
   n: number;
@@ -360,6 +398,7 @@ function DpTable({
   mode: "current" | "previous" | "mini";
   hidden?: boolean;
   revealBest?: boolean;
+  answerInput?: ReactNode;
 }) {
   const { minRow, maxRow } = rowRange(step, n);
   const candidate = (r1: number, r2: number) =>
@@ -374,7 +413,7 @@ function DpTable({
     );
     for (let c = 0; c < n; c += 1) {
       cells.push(
-        <span className="tb-axis" key={`h${c}`}>
+        <span className={`tb-axis ${mode === "current" && needsAnswer(event) && c === event.row2 ? "tb-axis-active" : ""}`} key={`h${c}`}>
           {c}
         </span>,
       );
@@ -383,7 +422,7 @@ function DpTable({
   for (let r1 = 0; r1 < n; r1 += 1) {
     if (mode !== "mini") {
       cells.push(
-        <span className="tb-axis" key={`r${r1}`}>
+        <span className={`tb-axis ${mode === "current" && needsAnswer(event) && r1 === event.row1 ? "tb-axis-active" : ""}`} key={`r${r1}`}>
           {r1}
         </span>,
       );
@@ -411,6 +450,7 @@ function DpTable({
         onDiagonal && seen && value === NEG && "tb-neg",
         onDiagonal && seen && value !== NEG && "tb-val",
         isCurrent && "tb-current",
+        isCurrent && hidden && "tb-to-fill",
         cand && "tb-cand",
         isBest && "tb-best",
       ]
@@ -422,7 +462,7 @@ function DpTable({
           key={`${r1}-${r2}`}
           title={cand ? cand.label : undefined}
         >
-          {text}
+          {isCurrent && hidden && answerInput ? answerInput : text}
         </span>,
       );
     }
@@ -431,7 +471,10 @@ function DpTable({
   return (
     <div
       className={`tb-table tb-table-${mode}`}
-      style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+      style={{
+        gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        minWidth: columns * (mode === "mini" ? 20 : 52),
+      }}
     >
       {cells}
     </div>
@@ -449,8 +492,9 @@ export default function TabulationLab() {
   const [speed, setSpeed] = useState<keyof typeof SPEEDS>("normal");
   const [quiz, setQuiz] = useState(false);
   const [answers, setAnswers] = useState<Map<number, Answer>>(new Map());
-  const [guess, setGuess] = useState("");
   const [showHint, setShowHint] = useState(false);
+  const [answerFeedback, setAnswerFeedback] = useState("");
+  const [positionGuesses, setPositionGuesses] = useState<Map<number, PositionGuess>>(new Map());
 
   const trace = useMemo(() => buildTabulation(grid), [grid]);
   const n = grid.length;
@@ -459,6 +503,23 @@ export default function TabulationLab() {
   const info = describe(event, grid);
   const answered = answers.get(cursor);
   const locked = quiz && needsAnswer(event) && !answered;
+  const positionGuess = positionGuesses.get(cursor) ?? { a: false, b: false, feedback: "", hint: false };
+  const guessingPositions = quiz && needsAnswer(event) && !answered;
+  const positionsPending = guessingPositions && (!positionGuess.a || !positionGuess.b);
+  const guessingWalker = positionGuess.a ? "B" : "A";
+  const guessPosition = (row: number, col: number) => {
+    const expectedRow = positionGuess.a ? event.row2 : event.row1;
+    const correct = row === expectedRow && col === event.step - expectedRow;
+    const next = {
+      ...positionGuess,
+      a: positionGuess.a || (correct && guessingWalker === "A"),
+      b: positionGuess.b || (correct && guessingWalker === "B"),
+      feedback: correct
+        ? `${guessingWalker} is correct at (${row}, ${col}). ${guessingWalker === "A" ? "Now click where B stands." : "Both positions found! Now fill the table cell."}`
+        : `Try again for ${guessingWalker}. Its row comes from the ${guessingWalker === "A" ? "first" : "second"} table index; its column is step minus that row.`,
+    };
+    setPositionGuesses((previous) => new Map(previous).set(cursor, next));
+  };
   const highlight = new Set<Kind>([event.kind]);
   const stepStart = useMemo(() => {
     const starts = new Map<number, number>();
@@ -491,13 +552,14 @@ export default function TabulationLab() {
     setCursor(0);
     setPlaying(false);
     setAnswers(new Map());
-    setGuess("");
+    setPositionGuesses(new Map());
     setShowHint(false);
+    setAnswerFeedback("");
   };
   const goTo = (index: number) => {
     setCursor(Math.max(0, Math.min(index, lastIndex)));
-    setGuess("");
     setShowHint(false);
+    setAnswerFeedback("");
   };
   const next = () => {
     if (locked || cursor >= lastIndex) return;
@@ -511,7 +573,6 @@ export default function TabulationLab() {
     const timer = window.setTimeout(() => {
       const nextIndex = cursor + 1;
       setCursor(nextIndex);
-      setGuess("");
       setShowHint(false);
       if (
         nextIndex >= lastIndex ||
@@ -557,7 +618,6 @@ export default function TabulationLab() {
         correct: value === event.value,
       }),
     );
-    setGuess("");
   };
 
   const changePreset = (value: string) => {
@@ -625,8 +685,36 @@ export default function TabulationLab() {
     .slice(0, cursor + 1)
     .filter((e) => e.kind === "fill").length;
 
+  const calculationStage = needsAnswer(event);
+  const revealCalculation = !hideValue || showHint;
+  const candidateValue = (row1: number, row2: number) => {
+    const candidate = event.candidates.find((item) => item.row1 === row1 && item.row2 === row2);
+    return candidate ? fmt(candidate.value) : "outside table → ignored";
+  };
+  const lineValues: Record<number, string | undefined> = {
+    1: `n = ${n}`,
+    2: event.kind === "init" ? `${n} × ${n}, all −∞` : undefined,
+    3: event.kind === "init" ? `previous[0][0] = ${grid[0][0]}` : undefined,
+    4: `step = ${event.step}`,
+    5: event.kind === "layer" ? `${n} × ${n}, all −∞` : undefined,
+    6: `lo = ${event.minRow}, hi = ${event.maxRow}`,
+    7: walkerA ? `row1 = ${walkerA.row}` : undefined,
+    8: walkerA ? `grid[${walkerA.row}][${walkerA.col}] = ${grid[walkerA.row][walkerA.col]}${event.kind === "skip1" ? " → skip A" : ""}` : undefined,
+    9: walkerB ? `row2 = ${walkerB.row}` : undefined,
+    10: walkerB ? `grid[${walkerB.row}][${walkerB.col}] = ${grid[walkerB.row][walkerB.col]}${event.kind === "skip2" ? " → skip B" : ""}` : undefined,
+    11: calculationStage ? `previous[${event.row1}][${event.row2}] = ${candidateValue(event.row1, event.row2)}` : undefined,
+    12: calculationStage ? candidateValue(event.row1 - 1, event.row2) : undefined,
+    13: calculationStage ? candidateValue(event.row1, event.row2 - 1) : undefined,
+    14: calculationStage ? `${candidateValue(event.row1 - 1, event.row2 - 1)}; best = ${revealCalculation ? fmt(event.best) : "?"}` : undefined,
+    15: calculationStage ? (revealCalculation ? `${event.best === NEG}${event.best === NEG ? " → skip cell" : ""}` : "best = ?") : undefined,
+    16: event.kind === "fill" && walkerA ? `gain = ${grid[walkerA.row][walkerA.col]}` : undefined,
+    17: event.kind === "fill" ? (revealCalculation ? `gain = ${event.gain}${event.row1 === event.row2 ? " (shared square, count once)" : " (two squares)"}` : "gain = ?") : undefined,
+    18: event.kind === "fill" ? `current[${event.row1}][${event.row2}] = ${hideValue ? "?" : `${fmt(event.best)} + ${event.gain} = ${fmt(event.value)}`}` : undefined,
+    20: event.kind === "done" ? `answer = ${trace.answer}` : undefined,
+  };
+
   return (
-    <main className="app-shell">
+    <main className="app-shell tb-app-shell">
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark">↘</span>
@@ -640,6 +728,7 @@ export default function TabulationLab() {
           <span className="live-dot" /> bottom-up table
         </div>
       </header>
+      <MethodNav current="/tabulation" />
 
       <section className="intro">
         <div>
@@ -659,6 +748,34 @@ export default function TabulationLab() {
           <strong>current[row₁][row₂]</strong>
           <small>O(n³) time · O(n²) space</small>
         </div>
+      </section>
+
+      <section className="panel calculation-panel" aria-labelledby="game-rules-title">
+        <span className="section-kicker">HOW TO PLAY</span>
+        <h2 id="game-rules-title">Game rules &amp; stages</h2>
+        <p>
+          Find the most cherries A and B can collect together. Both walkers
+          start at the top-left square and must reach the bottom-right square.
+          This represents the outward and return trips as two walkers moving
+          forward together.
+        </p>
+        <h3>Rules</h3>
+        <ul>
+          <li>Each turn, both walkers move one square right or down. Stay inside the grid and avoid thorns (−1).</li>
+          <li>A cherry square (1) adds one cherry; an empty square (0) adds none. If A and B share a square, count its cherry once.</li>
+          <li>Each table cell stores the best total for one pair of walker positions, rather than just one journey.</li>
+          <li>Use <code>-inf</code> for an unreachable table cell. If no complete route exists, the final answer is 0.</li>
+          <li>In predict mode, find both positions before entering the table value. Incorrect answers can be retried; hints are available.</li>
+        </ul>
+        <h3>Stages</h3>
+        <ol>
+          <li><b>Set up:</b> Choose a scenario or edit the grid, then select “Start calculation game” below.</li>
+          <li><b>Locate A and B:</b> For the highlighted table cell, click A’s square, then B’s square. For each walker, column = step − row. They may share a square.</li>
+          <li><b>Find the best previous total:</b> Compare the four possible previous table entries for the walkers’ right/down moves. Ignore entries outside the table or marked −∞.</li>
+          <li><b>Calculate:</b> Add the current squares’ cherries to the best reachable previous total, counting a shared square once. If none is reachable, enter <code>-inf</code>.</li>
+          <li><b>Check and continue:</b> Type the value in the outlined cell and press Enter or “Check cell”. After a correct answer, continue to the next cell and repeat through the layers.</li>
+          <li><b>Finish:</b> After {2 * (n - 1)} moves per walker on this {n} × {n} grid, review the maximum cherries and your calculation score. Use “Play again” to retry.</li>
+        </ol>
       </section>
 
       <section className="control-strip">
@@ -810,14 +927,28 @@ export default function TabulationLab() {
               </label>
             </div>
           )}
+          {guessingPositions && (
+            <div className="tb-position-game">
+              <strong>{positionsPending ? `Where is walker ${guessingWalker}? Click its square.` : "✓ Both positions found"}</strong>
+              <p>Step <b>{event.step}</b> · table cell <b>current[{event.row1}][{event.row2}]</b>. Find A first, then B. They may share the same square.</p>
+              <p><b>Position rule:</b> A’s row = first table index. B’s row = second table index. For both walkers, <b>column = step − row</b>. Grid coordinates are <b>(row, column)</b>, starting at 0.</p>
+              <p role="status">{positionGuess.feedback}</p>
+              {positionsPending && <button className="apply-button" onClick={() => setPositionGuesses((previous) => new Map(previous).set(cursor, { ...positionGuess, hint: !positionGuess.hint }))}>{positionGuess.hint ? "Hide position hint" : "Show position hint"}</button>}
+              {positionGuess.hint && <div className="tb-position-example">
+                <p><b>A:</b> row = {event.row1}; column = {event.step} − {event.row1} = {event.step - event.row1}. Click <b>({event.row1}, {event.step - event.row1})</b>.</p>
+                <p><b>B:</b> row = {event.row2}; column = {event.step} − {event.row2} = {event.step - event.row2}. Click <b>({event.row2}, {event.step - event.row2})</b>.</p>
+                <p>Rows count downward; columns count to the right. Every square on this step’s yellow diagonal has row + column = {event.step}.</p>
+              </div>}
+            </div>
+          )}
           <div
             className={`board ${editing ? "tb-editing" : ""}`}
             style={{ gridTemplateColumns: `repeat(${n}, 1fr)` }}
           >
             {grid.flatMap((row, r) =>
               row.map((value, c) => {
-                const one = walkerA?.row === r && walkerA.col === c;
-                const two = walkerB?.row === r && walkerB.col === c;
+                const one = (!guessingPositions || positionGuess.a) && walkerA?.row === r && walkerA.col === c;
+                const two = (!guessingPositions || positionGuess.b) && walkerB?.row === r && walkerB.col === c;
                 const onStep = !editing && r + c === event.step;
                 const inA = !editing && route?.a.has(`${r},${c}`);
                 const inB = !editing && route?.b.has(`${r},${c}`);
@@ -848,12 +979,12 @@ export default function TabulationLab() {
                     </span>
                   </>
                 );
-                return editing ? (
+                return editing || positionsPending ? (
                   <button
                     className={className}
                     key={`${r}-${c}`}
-                    onClick={() => editCell(r, c)}
-                    aria-label={`row ${r}, column ${c}`}
+                    onClick={() => editing ? editCell(r, c) : guessPosition(r, c)}
+                    aria-label={`row ${r}, column ${c}${!editing && positionsPending ? `, place walker ${guessingWalker}` : ""}`}
                   >
                     {content}
                   </button>
@@ -940,9 +1071,25 @@ export default function TabulationLab() {
                 event={event}
                 mode="current"
                 hidden={hideValue}
+                answerInput={positionsPending ? <span aria-label="Find A and B on the grid first">?</span> : <CellAnswer key={cursor} event={event} onCorrect={submit} onFeedback={setAnswerFeedback} />}
               />
             </div>
           </div>
+
+          {quiz && needsAnswer(event) && (
+            <div className="tb-direct-answer">
+              <p id="cell-answer-instructions">
+                {positionsPending ? <>First guess A and B’s positions by clicking their squares on the grid. Then calculate <b>current[{event.row1}][{event.row2}]</b>.</> : locked ? <>Fill the outlined cell: <b>current[{event.row1}][{event.row2}]</b>. Type your total directly in the cell, then press Enter. Use <b>-inf</b> for an unreachable cell.</> : <>✓ Correct! <b>current[{event.row1}][{event.row2}] = {fmt(event.value)}</b>.</>}
+              </p>
+              <p id="cell-answer-feedback" role="status">{answerFeedback}</p>
+              {locked ? <button type="submit" form="cell-answer-form" className="apply-button" disabled={positionsPending}>Check cell ↵</button> : <button className="apply-button" onClick={() => {
+                setPlaying(false);
+                const nextCell = trace.events.findIndex((item, index) => index > cursor && needsAnswer(item));
+                goTo(nextCell === -1 ? lastIndex : nextCell);
+              }}>Next cell →</button>}
+              {locked && <button className="edit-grid-button" onClick={() => setShowHint((value) => !value)}>{showHint ? "Hide hint" : "Show hint"}</button>}
+            </div>
+          )}
 
           <div className="event-card tb-event">
             <span className="event-number">
@@ -986,45 +1133,60 @@ export default function TabulationLab() {
               </div>
             </div>
           )}
-
-          {quiz && needsAnswer(event) && (
-            <div className="tb-quiz">
-              {answered ? (
-                <p className={answered.correct ? "tb-right" : "tb-wrong"}>
-                  {answered.correct
-                    ? `✓ Correct, ${answered.guess}!`
-                    : `✗ You said ${answered.guess}. The answer is ${fmt(event.value)}.`}
-                </p>
-              ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    submit(guess);
-                  }}
-                >
-                  <input
-                    value={guess}
-                    onChange={(e) => setGuess(e.target.value)}
-                    placeholder="your value"
-                    aria-label="Your predicted value"
-                    autoFocus
-                  />
-                  <button type="submit">check</button>
-                  <button type="button" onClick={() => submit("-inf")}>
-                    −∞
-                  </button>
-                  <button
-                    type="button"
-                    className="tb-hint"
-                    onClick={() => setShowHint(true)}
-                  >
-                    hint
-                  </button>
-                </form>
-              )}
-            </div>
-          )}
         </div>
+        <div className="panel tb-code">
+          <span className="section-kicker">04 / THE CODE</span>
+          <h2>Code trace &amp; variables</h2>
+          <p className="tb-trace-stage">Stage {cursor + 1} / {trace.events.length} · {KIND_LABEL[event.kind]}</p>
+          <p className="tb-trace-stage">Values appear beside their code lines for the current stage.{hideValue && " Quiz results stay hidden until you answer."}</p>
+          <pre>
+            {CODE.map(([tags, text], index) => (
+              <span
+                className={
+                  tags.some((tag) => highlight.has(tag)) ? "tb-line-on" : ""
+                }
+                key={index}
+              >
+                {text}
+                {lineValues[index] !== undefined && <em className="tb-inline-value">{`  # ${lineValues[index]}`}</em>}
+                {"\n"}
+              </span>
+            ))}
+          </pre>
+        </div>
+      </section>
+
+      <section className="panel calculation-panel" aria-labelledby="calculation-title">
+        <div className="panel-heading">
+          <div>
+            <span className="section-kicker">PLAY / CALCULATE A CELL</span>
+            <h2 id="calculation-title">You do the calculation</h2>
+          </div>
+          <span className="event-tag">{score.correct} cells solved</span>
+        </div>
+        {!quiz ? (
+          <>
+            <p>For each highlighted table cell, first guess A and B’s positions on the grid. Use the position hint if needed. Then type the total directly into the table cell and press Enter.</p>
+            <button className="apply-button" onClick={() => {
+              restart(grid);
+              setQuiz(true);
+              const firstCell = trace.events.findIndex(needsAnswer);
+              setCursor(firstCell === -1 ? lastIndex : firstCell);
+            }}>Start calculation game →</button>
+          </>
+        ) : needsAnswer(event) ? (
+          <p>Compare the highlighted previous cells, add the cherries, and type your answer directly into the orange outlined table cell.</p>
+        ) : (
+          <>
+            <p>{event.kind === "done" ? `Game complete! You solved ${score.correct} cells. The maximum number of cherries is ${trace.answer}.` : event.kind === "init" ? `Start with ${grid[0][0]} cherries at (0, 0). Count the start cell once because both walkers share it.` : info.body}</p>
+            <button className="apply-button" onClick={() => {
+              setPlaying(false);
+              if (event.kind === "done") restart(grid);
+              const nextCell = trace.events.findIndex((item, index) => (event.kind === "done" || index > cursor) && needsAnswer(item));
+              goTo(nextCell === -1 ? lastIndex : nextCell);
+            }}>{event.kind === "done" ? "Play again ↺" : "Calculate next cell →"}</button>
+          </>
+        )}
       </section>
 
       <section className="stats-row">
@@ -1073,7 +1235,7 @@ export default function TabulationLab() {
         </section>
       )}
 
-      <section className="tb-lower">
+      <section className="tb-lower tb-lower-layers">
         <div className="panel tb-layers">
           <span className="section-kicker">03 / EVERY LAYER</span>
           <h2>The whole run at a glance</h2>
@@ -1098,6 +1260,7 @@ export default function TabulationLab() {
               return (
                 <button
                   className={`tb-layer ${state}`}
+                  style={{ flexBasis: Math.max(124, n * 20 + 14) }}
                   key={step}
                   onClick={() => {
                     setPlaying(false);
@@ -1119,23 +1282,7 @@ export default function TabulationLab() {
           </div>
         </div>
 
-        <div className="panel tb-code">
-          <span className="section-kicker">04 / THE CODE</span>
-          <h2>Line being executed</h2>
-          <pre>
-            {CODE.map(([tags, text], index) => (
-              <span
-                className={
-                  tags.some((tag) => highlight.has(tag)) ? "tb-line-on" : ""
-                }
-                key={index}
-              >
-                {text}
-                {"\n"}
-              </span>
-            ))}
-          </pre>
-        </div>
+
       </section>
 
       <footer className="footer">

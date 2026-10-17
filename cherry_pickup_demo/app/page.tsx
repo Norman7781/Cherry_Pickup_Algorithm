@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import MethodNav from "./method-nav";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PRESETS, type Grid } from "./presets";
 
@@ -593,6 +594,7 @@ export default function Home() {
           </Link>
         </div>
       </header>
+      <MethodNav current="/" />
 
       <section className="intro">
         <div>
