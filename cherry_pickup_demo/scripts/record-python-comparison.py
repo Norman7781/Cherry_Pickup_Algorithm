@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import platform
 import subprocess
+import statistics
 import sys
 
 
@@ -39,6 +40,19 @@ for input_file in inputs:
             raise RuntimeError(f"Unstable answers: {filename}, {script}")
         # Keep the real console output from the median-time run.
         case[method] = sorted(runs, key=lambda run: run["seconds"])[1]
+        # Measure auxiliary Python memory in fresh processes, without timing.
+        memory_runs = []
+        for _ in range(3):
+            result = subprocess.run(
+                [sys.executable, str(app / "scripts" / "measure-python-memory.py"),
+                 str(project / script), str(input_file)],
+                text=True, capture_output=True, check=True,
+            )
+            memory = json.loads(result.stdout)
+            if memory["answer"] != case[method]["answer"]:
+                raise RuntimeError(f"Memory run answer differs: {filename}, {script}")
+            memory_runs.append(memory["peakKiB"])
+        case[method]["peakKiB"] = statistics.median(memory_runs)
     if case["dfs"]["answer"] != case["dp"]["answer"]:
         raise RuntimeError(f"DFS and DP disagree on {filename}")
     cases.append(case)
@@ -51,6 +65,8 @@ data = {
     "recordedAt": datetime.now(timezone.utc).isoformat(),
     "python": platform.python_version(),
     "runs": 3,
+    "memoryRuns": 3,
+    "memoryMethod": "tracemalloc peak Python allocations during solver execution; excludes input grid, imports, and interpreter memory",
     "sources": {script: hashlib.sha256((project / script).read_bytes()).hexdigest()
                 for script in ("Cherry_DFS.py", "Cherry_DP.py")},
     "cases": cases,

@@ -1,7 +1,9 @@
 {
-  "recordedAt": "2026-10-17T02:16:28.712665+00:00",
+  "recordedAt": "2026-10-17T02:58:42.596076+00:00",
   "python": "3.14.6",
   "runs": 3,
+  "memoryRuns": 3,
+  "memoryMethod": "tracemalloc peak Python allocations during solver execution; excludes input grid, imports, and interpreter memory",
   "sources": {
     "Cherry_DFS.py": "0f6466b69fa53d0c00c7333e9e3cd2e3afc8b42147f9299fc10be95b04d7c4f5",
     "Cherry_DP.py": "637bcc563ac88701d88b8d04b4d07c73da12a4ec51aafa53f987365431cc9fbe"
@@ -12,13 +14,15 @@
       "size": 1,
       "dfs": {
         "answer": 1,
-        "seconds": 3e-06,
-        "output": "1\nstate count = 1\ntime taken = 0.000003 sec"
+        "seconds": 4e-06,
+        "output": "1\nstate count = 1\ntime taken = 0.000004 sec",
+        "peakKiB": 1.0703125
       },
       "dp": {
         "answer": 1,
         "seconds": 3e-06,
-        "output": "1\ntime taken = 0.000003 sec"
+        "output": "1\ntime taken = 0.000003 sec",
+        "peakKiB": 0.40625
       }
     },
     {
@@ -26,13 +30,15 @@
       "size": 3,
       "dfs": {
         "answer": 0,
-        "seconds": 1.1e-05,
-        "output": "0\nstate count = 5\ntime taken = 0.000011 sec"
+        "seconds": 1.2e-05,
+        "output": "0\nstate count = 5\ntime taken = 0.000012 sec",
+        "peakKiB": 1.671875
       },
       "dp": {
         "answer": 0,
         "seconds": 1.2e-05,
-        "output": "0\ntime taken = 0.000012 sec"
+        "output": "0\ntime taken = 0.000012 sec",
+        "peakKiB": 0.984375
       }
     },
     {
@@ -41,12 +47,14 @@
       "dfs": {
         "answer": 6,
         "seconds": 2.7e-05,
-        "output": "6\nstate count = 41\ntime taken = 0.000027 sec"
+        "output": "6\nstate count = 41\ntime taken = 0.000027 sec",
+        "peakKiB": 3.1015625
       },
       "dp": {
         "answer": 6,
-        "seconds": 1.6e-05,
-        "output": "6\ntime taken = 0.000016 sec"
+        "seconds": 1.5e-05,
+        "output": "6\ntime taken = 0.000015 sec",
+        "peakKiB": 0.984375
       }
     },
     {
@@ -54,13 +62,15 @@
       "size": 4,
       "dfs": {
         "answer": 0,
-        "seconds": 5.7e-05,
-        "output": "0\nstate count = 113\ntime taken = 0.000057 sec"
+        "seconds": 5.8e-05,
+        "output": "0\nstate count = 113\ntime taken = 0.000058 sec",
+        "peakKiB": 7.625
       },
       "dp": {
         "answer": 0,
         "seconds": 2.2e-05,
-        "output": "0\ntime taken = 0.000022 sec"
+        "output": "0\ntime taken = 0.000022 sec",
+        "peakKiB": 1.203125
       }
     },
     {
@@ -69,12 +79,14 @@
       "dfs": {
         "answer": 9,
         "seconds": 1.3e-05,
-        "output": "9\nstate count = 9\ntime taken = 0.000013 sec"
+        "output": "9\nstate count = 9\ntime taken = 0.000013 sec",
+        "peakKiB": 2.3984375
       },
       "dp": {
         "answer": 9,
-        "seconds": 1.7e-05,
-        "output": "9\ntime taken = 0.000017 sec"
+        "seconds": 1.8e-05,
+        "output": "9\ntime taken = 0.000018 sec",
+        "peakKiB": 1.5078125
       }
     },
     {
@@ -82,13 +94,15 @@
       "size": 10,
       "dfs": {
         "answer": 28,
-        "seconds": 0.000557,
-        "output": "28\nstate count = 1168\ntime taken = 0.000557 sec"
+        "seconds": 0.000555,
+        "output": "28\nstate count = 1168\ntime taken = 0.000555 sec",
+        "peakKiB": 53.5078125
       },
       "dp": {
         "answer": 28,
-        "seconds": 0.000151,
-        "output": "28\ntime taken = 0.000151 sec"
+        "seconds": 0.000152,
+        "output": "28\ntime taken = 0.000152 sec",
+        "peakKiB": 3.390625
       }
     },
     {
@@ -96,13 +110,15 @@
       "size": 10,
       "dfs": {
         "answer": 36,
-        "seconds": 0.000961,
-        "output": "36\nstate count = 2281\ntime taken = 0.000961 sec"
+        "seconds": 0.000924,
+        "output": "36\nstate count = 2281\ntime taken = 0.000924 sec",
+        "peakKiB": 66.7265625
       },
       "dp": {
         "answer": 36,
-        "seconds": 0.000169,
-        "output": "36\ntime taken = 0.000169 sec"
+        "seconds": 0.000163,
+        "output": "36\ntime taken = 0.000163 sec",
+        "peakKiB": 3.390625
       }
     },
     {
@@ -110,13 +126,15 @@
       "size": 15,
       "dfs": {
         "answer": 34,
-        "seconds": 0.001858,
-        "output": "34\nstate count = 3566\ntime taken = 0.001858 sec"
+        "seconds": 0.001789,
+        "output": "34\nstate count = 3566\ntime taken = 0.001789 sec",
+        "peakKiB": 207.2109375
       },
       "dp": {
         "answer": 34,
-        "seconds": 0.000449,
-        "output": "34\ntime taken = 0.000449 sec"
+        "seconds": 0.000434,
+        "output": "34\ntime taken = 0.000434 sec",
+        "peakKiB": 5.890625
       }
     },
     {
@@ -124,13 +142,15 @@
       "size": 20,
       "dfs": {
         "answer": 57,
-        "seconds": 0.005918,
-        "output": "57\nstate count = 13169\ntime taken = 0.005918 sec"
+        "seconds": 0.005793,
+        "output": "57\nstate count = 13169\ntime taken = 0.005793 sec",
+        "peakKiB": 443.7734375
       },
       "dp": {
         "answer": 57,
-        "seconds": 0.001114,
-        "output": "57\ntime taken = 0.001114 sec"
+        "seconds": 0.001097,
+        "output": "57\ntime taken = 0.001097 sec",
+        "peakKiB": 9.296875
       }
     },
     {
@@ -138,13 +158,15 @@
       "size": 25,
       "dfs": {
         "answer": 69,
-        "seconds": 0.006018,
-        "output": "69\nstate count = 12162\ntime taken = 0.006018 sec"
+        "seconds": 0.005853,
+        "output": "69\nstate count = 12162\ntime taken = 0.005853 sec",
+        "peakKiB": 476.9609375
       },
       "dp": {
         "answer": 69,
-        "seconds": 0.001725,
-        "output": "69\ntime taken = 0.001725 sec"
+        "seconds": 0.00167,
+        "output": "69\ntime taken = 0.001670 sec",
+        "peakKiB": 13.4765625
       }
     },
     {
@@ -152,13 +174,15 @@
       "size": 30,
       "dfs": {
         "answer": 79,
-        "seconds": 0.010079,
-        "output": "79\nstate count = 20483\ntime taken = 0.010079 sec"
+        "seconds": 0.009909,
+        "output": "79\nstate count = 20483\ntime taken = 0.009909 sec",
+        "peakKiB": 863.484375
       },
       "dp": {
         "answer": 79,
-        "seconds": 0.002936,
-        "output": "79\ntime taken = 0.002936 sec"
+        "seconds": 0.002873,
+        "output": "79\ntime taken = 0.002873 sec",
+        "peakKiB": 18.328125
       }
     },
     {
@@ -166,13 +190,15 @@
       "size": 35,
       "dfs": {
         "answer": 118,
-        "seconds": 0.03021,
-        "output": "118\nstate count = 65839\ntime taken = 0.030210 sec"
+        "seconds": 0.029059,
+        "output": "118\nstate count = 65839\ntime taken = 0.029059 sec",
+        "peakKiB": 2050.1796875
       },
       "dp": {
         "answer": 118,
-        "seconds": 0.00552,
-        "output": "118\ntime taken = 0.005520 sec"
+        "seconds": 0.005415,
+        "output": "118\ntime taken = 0.005415 sec",
+        "peakKiB": 24.078125
       }
     },
     {
@@ -180,13 +206,15 @@
       "size": 40,
       "dfs": {
         "answer": 113,
-        "seconds": 0.02736,
-        "output": "113\nstate count = 52591\ntime taken = 0.027360 sec"
+        "seconds": 0.02584,
+        "output": "113\nstate count = 52591\ntime taken = 0.025840 sec",
+        "peakKiB": 2037.265625
       },
       "dp": {
         "answer": 113,
-        "seconds": 0.006885,
-        "output": "113\ntime taken = 0.006885 sec"
+        "seconds": 0.006757,
+        "output": "113\ntime taken = 0.006757 sec",
+        "peakKiB": 30.484375
       }
     },
     {
@@ -194,13 +222,15 @@
       "size": 50,
       "dfs": {
         "answer": 196,
-        "seconds": 0.136423,
-        "output": "196\nstate count = 323401\ntime taken = 0.136423 sec"
+        "seconds": 0.128732,
+        "output": "196\nstate count = 323401\ntime taken = 0.128732 sec",
+        "peakKiB": 8424.0
       },
       "dp": {
         "answer": 196,
-        "seconds": 0.0169,
-        "output": "196\ntime taken = 0.016900 sec"
+        "seconds": 0.016511,
+        "output": "196\ntime taken = 0.016511 sec",
+        "peakKiB": 45.828125
       }
     },
     {
@@ -208,13 +238,15 @@
       "size": 50,
       "dfs": {
         "answer": 159,
-        "seconds": 0.081941,
-        "output": "159\nstate count = 180579\ntime taken = 0.081941 sec"
+        "seconds": 0.083022,
+        "output": "159\nstate count = 180579\ntime taken = 0.083022 sec",
+        "peakKiB": 6919.828125
       },
       "dp": {
         "answer": 159,
-        "seconds": 0.01555,
-        "output": "159\ntime taken = 0.015550 sec"
+        "seconds": 0.015599,
+        "output": "159\ntime taken = 0.015599 sec",
+        "peakKiB": 45.828125
       }
     }
   ]

@@ -1476,6 +1476,12 @@ input[type="range"] {
   gap: 10px;
   font-size: 13px;
 }
+.run-space-explanation {
+  padding: 4px 18px;
+  margin-bottom: 18px;
+  border-left: 3px solid #368398;
+  background: #eaf2f3;
+}
 .run-case-picker select {
   padding: 9px;
   border: 1px solid var(--line);

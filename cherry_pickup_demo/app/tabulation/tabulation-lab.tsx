@@ -443,7 +443,7 @@ function DpTable({
       let text = "";
       if (onDiagonal && seen) text = fmt(value);
       if (isCurrent && hidden) text = "?";
-      if (mode === "mini" && value === NEG) text = "";
+      if (mode === "mini" && value === NEG) text = "−∞";
       const className = [
         "tb-cell",
         !onDiagonal && "tb-off",
@@ -460,7 +460,7 @@ function DpTable({
         <span
           className={className}
           key={`${r1}-${r2}`}
-          title={cand ? cand.label : undefined}
+          title={cand ? cand.label : mode === "mini" ? `[${r1}][${r2}] = ${fmt(value)}` : undefined}
         >
           {isCurrent && hidden && answerInput ? answerInput : text}
         </span>,
@@ -1242,6 +1242,8 @@ export default function TabulationLab() {
           <p>
             One small table per step. Only two are kept in memory at any time.
             Click a layer to jump to it.
+            {" "}−∞ means no route has been saved for that state. Striped cells
+            are outside the layer’s valid row range.
           </p>
           <div className="tb-layer-strip">
             {trace.layers.map((layer, step) => {
