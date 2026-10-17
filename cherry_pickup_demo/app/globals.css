@@ -1351,6 +1351,183 @@ input[type="range"] {
   outline: 2px solid var(--orange);
   outline-offset: 3px;
 }
+.run-chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0 16px;
+}
+.run-chart-controls button {
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 13px;
+}
+.run-chart-controls button[aria-pressed="true"] {
+  background: var(--ink);
+  color: white;
+}
+.run-chart {
+  margin: 0;
+  padding: 22px 16px;
+  border: 1px solid var(--line);
+  background: #fafbf7;
+  --chart-label-width: 100px;
+  --chart-value-width: 72px;
+}
+.run-chart figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 16px;
+}
+.run-chart figcaption > span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.run-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin: 18px 0;
+  font-size: 12px;
+}
+.run-chart-legend i {
+  display: inline-block;
+  width: 12px;
+  height: 8px;
+  margin-right: 6px;
+}
+.run-swatch-dfs,
+.run-bar-dfs {
+  background: #cc673f;
+}
+.run-swatch-dp,
+.run-bar-dp {
+  background: #368398;
+}
+.run-line-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.run-line-grid {
+  stroke: #dde3d7;
+  stroke-width: 1;
+}
+.run-line-baseline {
+  stroke: #a7b2a0;
+}
+.run-line-tick,
+.run-line-unit {
+  font: 12px var(--font-geist-mono), monospace;
+  fill: var(--muted);
+}
+.run-line-unit {
+  fill: var(--ink);
+}
+.run-line-selection {
+  stroke: #ad7d57;
+  stroke-dasharray: 4 5;
+}
+.run-series {
+  fill: none;
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.run-series-dfs {
+  stroke: #cc673f;
+}
+.run-series-dp {
+  stroke: #368398;
+  stroke-dasharray: 8 5;
+}
+.run-point-dfs {
+  fill: #fafbf7;
+  stroke: #cc673f;
+  stroke-width: 3;
+}
+.run-point-dp {
+  fill: #368398;
+}
+.run-line-point {
+  cursor: pointer;
+}
+.run-line-point:focus-visible {
+  outline: none;
+}
+.run-line-point:hover .run-point-dfs,
+.run-line-point:focus-visible .run-point-dfs,
+.run-line-point[aria-pressed="true"] .run-point-dfs {
+  fill: #f6c79e;
+  stroke-width: 5;
+}
+.run-line-note {
+  font-size: 12px !important;
+  color: var(--muted);
+}
+.run-case-picker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+}
+.run-case-picker select {
+  padding: 9px;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--ink);
+}
+.run-case-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding: 16px;
+  margin: 16px 0;
+  background: #e7eee8;
+  font-size: 13px;
+}
+@media (max-width: 600px) {
+  .run-chart {
+    padding: 16px 6px;
+  }
+}
+.test-run-pass {
+  color: #426e42;
+  white-space: nowrap;
+}
+.test-run-terminals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.test-run-terminal {
+  min-width: 0;
+}
+.test-run-terminal pre,
+.test-run-refresh pre {
+  padding: 18px;
+  background: var(--ink);
+  color: #e3ece4;
+  overflow-x: auto;
+  font: 12px/1.8 var(--font-geist-mono), monospace;
+}
+.test-run-command {
+  color: #f6c79e;
+}
+.test-run-refresh {
+  margin-top: 18px;
+  font-size: 13px;
+}
+@media (max-width: 850px) {
+  .test-run-terminals {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 .method-comparison {
   padding: 26px;
   margin-top: 24px;

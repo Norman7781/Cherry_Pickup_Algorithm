@@ -43,3 +43,31 @@ have O(n³) worst-case time; the rolling-layer DP uses O(n²) extra space.
 The fixed code returns 0 at the finish, maximizes `gain + dfs(child)`,
 and adds the start cell once to the root’s best future. Cached values no longer
 include cherries collected before reaching a state.
+
+## Additional manual inputs
+
+There are now 15 input files in total. Both fixed solvers agree on all files.
+
+| Input | Size | Expected cherries |
+| --- | --- | ---: |
+| `tiny.txt` | 1 × 1 | 1 |
+| `blocked.txt` | 3 × 3 | 0 |
+| `empty.txt` | 4 × 4 | 0 |
+| `path.txt` | 5 × 5 | 9 |
+| `open.txt` | 10 × 10 | 36 |
+| `n15.txt` | 15 × 15 | 34 |
+| `n25.txt` | 25 × 25 | 69 |
+| `n30.txt` | 30 × 30 | 79 |
+| `n40.txt` | 40 × 40 | 113 |
+| `full.txt` | 50 × 50 | 196 |
+
+`tiny` checks one shared cherry; `empty` has no cherries; `blocked` has no
+complete path; `path` forces a shared corridor; `open` and `full` have no
+thorns. The n15/n25/n30/n40 files provide intermediate random grid sizes.
+
+Run any case manually, for example:
+
+```bash
+python3 Cherry_DFS.py < test_cases/n25.txt
+python3 Cherry_DP.py < test_cases/n25.txt
+```

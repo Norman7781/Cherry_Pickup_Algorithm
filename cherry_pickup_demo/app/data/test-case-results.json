@@ -1,0 +1,221 @@
+{
+  "recordedAt": "2026-10-17T02:16:28.712665+00:00",
+  "python": "3.14.6",
+  "runs": 3,
+  "sources": {
+    "Cherry_DFS.py": "0f6466b69fa53d0c00c7333e9e3cd2e3afc8b42147f9299fc10be95b04d7c4f5",
+    "Cherry_DP.py": "637bcc563ac88701d88b8d04b4d07c73da12a4ec51aafa53f987365431cc9fbe"
+  },
+  "cases": [
+    {
+      "file": "tiny.txt",
+      "size": 1,
+      "dfs": {
+        "answer": 1,
+        "seconds": 3e-06,
+        "output": "1\nstate count = 1\ntime taken = 0.000003 sec"
+      },
+      "dp": {
+        "answer": 1,
+        "seconds": 3e-06,
+        "output": "1\ntime taken = 0.000003 sec"
+      }
+    },
+    {
+      "file": "blocked.txt",
+      "size": 3,
+      "dfs": {
+        "answer": 0,
+        "seconds": 1.1e-05,
+        "output": "0\nstate count = 5\ntime taken = 0.000011 sec"
+      },
+      "dp": {
+        "answer": 0,
+        "seconds": 1.2e-05,
+        "output": "0\ntime taken = 0.000012 sec"
+      }
+    },
+    {
+      "file": "small.txt",
+      "size": 3,
+      "dfs": {
+        "answer": 6,
+        "seconds": 2.7e-05,
+        "output": "6\nstate count = 41\ntime taken = 0.000027 sec"
+      },
+      "dp": {
+        "answer": 6,
+        "seconds": 1.6e-05,
+        "output": "6\ntime taken = 0.000016 sec"
+      }
+    },
+    {
+      "file": "empty.txt",
+      "size": 4,
+      "dfs": {
+        "answer": 0,
+        "seconds": 5.7e-05,
+        "output": "0\nstate count = 113\ntime taken = 0.000057 sec"
+      },
+      "dp": {
+        "answer": 0,
+        "seconds": 2.2e-05,
+        "output": "0\ntime taken = 0.000022 sec"
+      }
+    },
+    {
+      "file": "path.txt",
+      "size": 5,
+      "dfs": {
+        "answer": 9,
+        "seconds": 1.3e-05,
+        "output": "9\nstate count = 9\ntime taken = 0.000013 sec"
+      },
+      "dp": {
+        "answer": 9,
+        "seconds": 1.7e-05,
+        "output": "9\ntime taken = 0.000017 sec"
+      }
+    },
+    {
+      "file": "medium.txt",
+      "size": 10,
+      "dfs": {
+        "answer": 28,
+        "seconds": 0.000557,
+        "output": "28\nstate count = 1168\ntime taken = 0.000557 sec"
+      },
+      "dp": {
+        "answer": 28,
+        "seconds": 0.000151,
+        "output": "28\ntime taken = 0.000151 sec"
+      }
+    },
+    {
+      "file": "open.txt",
+      "size": 10,
+      "dfs": {
+        "answer": 36,
+        "seconds": 0.000961,
+        "output": "36\nstate count = 2281\ntime taken = 0.000961 sec"
+      },
+      "dp": {
+        "answer": 36,
+        "seconds": 0.000169,
+        "output": "36\ntime taken = 0.000169 sec"
+      }
+    },
+    {
+      "file": "n15.txt",
+      "size": 15,
+      "dfs": {
+        "answer": 34,
+        "seconds": 0.001858,
+        "output": "34\nstate count = 3566\ntime taken = 0.001858 sec"
+      },
+      "dp": {
+        "answer": 34,
+        "seconds": 0.000449,
+        "output": "34\ntime taken = 0.000449 sec"
+      }
+    },
+    {
+      "file": "large.txt",
+      "size": 20,
+      "dfs": {
+        "answer": 57,
+        "seconds": 0.005918,
+        "output": "57\nstate count = 13169\ntime taken = 0.005918 sec"
+      },
+      "dp": {
+        "answer": 57,
+        "seconds": 0.001114,
+        "output": "57\ntime taken = 0.001114 sec"
+      }
+    },
+    {
+      "file": "n25.txt",
+      "size": 25,
+      "dfs": {
+        "answer": 69,
+        "seconds": 0.006018,
+        "output": "69\nstate count = 12162\ntime taken = 0.006018 sec"
+      },
+      "dp": {
+        "answer": 69,
+        "seconds": 0.001725,
+        "output": "69\ntime taken = 0.001725 sec"
+      }
+    },
+    {
+      "file": "n30.txt",
+      "size": 30,
+      "dfs": {
+        "answer": 79,
+        "seconds": 0.010079,
+        "output": "79\nstate count = 20483\ntime taken = 0.010079 sec"
+      },
+      "dp": {
+        "answer": 79,
+        "seconds": 0.002936,
+        "output": "79\ntime taken = 0.002936 sec"
+      }
+    },
+    {
+      "file": "huge.txt",
+      "size": 35,
+      "dfs": {
+        "answer": 118,
+        "seconds": 0.03021,
+        "output": "118\nstate count = 65839\ntime taken = 0.030210 sec"
+      },
+      "dp": {
+        "answer": 118,
+        "seconds": 0.00552,
+        "output": "118\ntime taken = 0.005520 sec"
+      }
+    },
+    {
+      "file": "n40.txt",
+      "size": 40,
+      "dfs": {
+        "answer": 113,
+        "seconds": 0.02736,
+        "output": "113\nstate count = 52591\ntime taken = 0.027360 sec"
+      },
+      "dp": {
+        "answer": 113,
+        "seconds": 0.006885,
+        "output": "113\ntime taken = 0.006885 sec"
+      }
+    },
+    {
+      "file": "full.txt",
+      "size": 50,
+      "dfs": {
+        "answer": 196,
+        "seconds": 0.136423,
+        "output": "196\nstate count = 323401\ntime taken = 0.136423 sec"
+      },
+      "dp": {
+        "answer": 196,
+        "seconds": 0.0169,
+        "output": "196\ntime taken = 0.016900 sec"
+      }
+    },
+    {
+      "file": "max.txt",
+      "size": 50,
+      "dfs": {
+        "answer": 159,
+        "seconds": 0.081941,
+        "output": "159\nstate count = 180579\ntime taken = 0.081941 sec"
+      },
+      "dp": {
+        "answer": 159,
+        "seconds": 0.01555,
+        "output": "159\ntime taken = 0.015550 sec"
+      }
+    }
+  ]
+}

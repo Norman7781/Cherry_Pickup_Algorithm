@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import MethodComparison from "../method-comparison";
 import MethodNav from "../method-nav";
+import TestRunComparison from "../test-run-comparison";
 
 export const metadata: Metadata = {
   title: "Two Method Analysis | Algorithm Lab",
@@ -21,6 +22,7 @@ export default function AnalysisPage() {
           <p className="lede">Compare how DFS with memoization and bottom-up tabulation solve Cherry Pickup, and review the submission report’s results.</p>
         </div>
       </section>
+      <TestRunComparison />
       <MethodComparison />
       <footer className="footer"><span>cherry pickup / method analysis</span></footer>
     </main>
