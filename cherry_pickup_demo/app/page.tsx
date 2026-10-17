@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import MethodNav from "./method-nav";
+import DfsTreeGame from "./dfs-tree-game";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PRESETS, type Grid } from "./presets";
 
@@ -1011,6 +1012,8 @@ export default function Home() {
           </span>
         </div>
       </section>
+
+      <DfsTreeGame key={JSON.stringify(grid)} grid={grid} optimum={trace.result} />
 
       <footer className="footer">
         <span>cherry pickup / visual study</span>

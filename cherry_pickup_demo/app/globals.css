@@ -979,6 +979,355 @@ input[type="range"] {
 .tb-speed {
   min-width: 80px;
 }
+.dfs-tree-game > p,
+.dfs-tree-game details,
+.dfs-adventure-layout p {
+  font-size: 14px;
+  line-height: 1.65;
+}
+.dfs-game-modes,
+.dfs-play-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+.dfs-game-modes button[aria-pressed="true"] {
+  background: var(--ink);
+  color: white;
+}
+.dfs-play-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px;
+  background: #e7eee8;
+  margin: 20px 0;
+}
+.dfs-play-stats span {
+  font: 10px var(--font-geist-mono), monospace;
+  color: var(--muted);
+}
+.dfs-play-stats b {
+  display: block;
+  color: var(--ink);
+  font-size: 22px;
+  margin-top: 8px;
+}
+.dfs-adventure-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.65fr) minmax(0, 1.35fr);
+  gap: 24px;
+  align-items: start;
+}
+.dfs-play-board .board {
+  max-width: 310px;
+  width: 100%;
+  gap: 4px;
+}
+.dfs-garden {
+  position: relative;
+  isolation: isolate;
+  border: 5px solid #91ab72;
+  border-radius: 12px;
+  background: #b1c995;
+  padding: 4px;
+  overflow: hidden;
+}
+.dfs-garden .cell {
+  border-radius: 5px;
+  background: #e5efd4;
+}
+.dfs-garden .garden-girl-trail {
+  background: #f6d4de !important;
+}
+.dfs-garden .garden-boy-trail {
+  background: #d2e9f3 !important;
+}
+.dfs-garden .garden-shared-trail {
+  background: linear-gradient(135deg, #f6d4de 50%, #d2e9f3 50%) !important;
+}
+.garden-paths {
+  position: absolute;
+  inset: 4px;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  pointer-events: none;
+  z-index: 1;
+}
+.garden-paths polyline {
+  fill: none;
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 4 5;
+  opacity: 0.65;
+}
+.garden-girl-line {
+  stroke: #c46084;
+}
+.garden-boy-line {
+  stroke: #4085ac;
+}
+.garden-character {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  font-size: 30px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 2px #0003);
+  transition: left 350ms ease, top 350ms ease;
+}
+.garden-girl {
+  transform: translate(-95%, -50%);
+}
+.garden-boy {
+  transform: translate(-5%, -50%);
+}
+.garden-finish {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  font-size: 16px;
+}
+.dfs-character-moves {
+  display: flex;
+  gap: 5px;
+}
+.dfs-play-node .dfs-character-moves span {
+  font-size: 13px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .garden-character {
+    transition: none;
+  }
+}
+.dfs-play-board .cell-value {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+  font-size: 22px;
+}
+.dfs-picked {
+  background: #d7e9d6 !important;
+}
+.dfs-picked .cell-value {
+  color: #537d53;
+}
+.dfs-play-message {
+  border-left: 3px solid var(--orange);
+  background: #fff4de;
+  padding: 14px;
+}
+.dfs-play-message p {
+  margin-bottom: 0;
+}
+.dfs-result-won {
+  background: #e1efd9;
+  border-color: #537d53;
+}
+.dfs-result-lost {
+  background: #fbe5df;
+  border-color: #b64432;
+}
+.dfs-tree-toolbar,
+.dfs-path-crumbs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+.dfs-path-crumbs {
+  justify-content: flex-start;
+}
+.dfs-path-crumbs button {
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  background: #fff4de;
+  font-size: 11px;
+  cursor: pointer;
+}
+.dfs-play-key {
+  color: var(--muted);
+  font-size: 12px !important;
+}
+.dfs-play-tree-panel {
+  min-width: 0;
+}
+.dfs-garden-map {
+  position: relative;
+  isolation: isolate;
+  min-height: 340px;
+  padding: 24px 12px;
+  border: 1px solid #a8bd8d;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 12px 12px, #bfd394 2px, transparent 3px) 0 0 / 34px 34px,
+    linear-gradient(135deg, #f0f5df, #e0edcf);
+}
+.garden-roads {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+.garden-roads path {
+  fill: none;
+  stroke-linecap: round;
+}
+.garden-road-base {
+  stroke: #f7f0d9;
+  stroke-width: 12;
+}
+.garden-road-chosen {
+  stroke: #df8754;
+  stroke-width: 5;
+}
+.garden-road-next {
+  stroke: #6a9253;
+  stroke-width: 4;
+  stroke-dasharray: 5 7;
+}
+.garden-road-unused {
+  stroke: #b5b9ad;
+  stroke-width: 3;
+  stroke-dasharray: 4 7;
+}
+.garden-map-level + .garden-map-level {
+  margin-top: 44px;
+}
+.garden-level-label {
+  display: block;
+  width: fit-content;
+  margin: 0 auto 12px;
+  padding: 4px 8px;
+  border-radius: 10px;
+  background: #edf3df;
+  color: #68765b;
+  font: 9px var(--font-geist-mono), monospace;
+}
+.garden-map-stops {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 18px 12px;
+}
+.garden-players-here {
+  font-size: 22px !important;
+  visibility: hidden;
+}
+.garden-map-party {
+  position: absolute;
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: 22px;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+  transition: left 450ms ease, top 450ms ease;
+  filter: drop-shadow(0 2px 2px #0002);
+}
+@media (prefers-reduced-motion: reduce) {
+  .garden-map-party {
+    transition: none;
+  }
+}
+.dfs-play-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  padding: 10px;
+  text-align: center;
+  background: white;
+  border: 1px solid #a5b5a5;
+  cursor: pointer;
+  color: var(--ink);
+}
+.dfs-play-node strong {
+  font-size: 11px;
+}
+.dfs-play-node span {
+  font-size: 14px;
+}
+.dfs-play-node small {
+  font: 8px var(--font-geist-mono), monospace;
+  letter-spacing: 0.04em;
+}
+.dfs-play-node.on-route {
+  border: 2px solid var(--orange);
+  background: #fff0e5;
+}
+.dfs-play-tree li.dfs-map-chosen::before {
+  background: var(--orange);
+  width: 3px;
+}
+.dfs-play-tree li.dfs-map-unchosen::before {
+  background: #c2c6c1;
+}
+.dfs-play-node.is-unchosen {
+  width: 88px;
+  height: 88px;
+  background: #e4e6e2;
+  border: 1px dashed #a9aea7;
+  color: #7a8178;
+  filter: grayscale(1);
+}
+.dfs-play-node.is-unchosen span {
+  font-size: 11px;
+}
+.dfs-play-node.on-best {
+  box-shadow: 0 0 0 3px #d7b44d;
+}
+.dfs-play-node.is-choice {
+  background: #e1efd9;
+  border: 2px solid #5f8759;
+}
+.dfs-play-node.is-active {
+  background: #f9d5c2;
+  border: 3px solid var(--orange);
+}
+.dfs-play-node:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.dfs-play-node:not(:disabled):hover {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+.dfs-play-node:focus-visible,
+.dfs-play-tree:focus-visible {
+  outline: 3px solid var(--orange);
+  outline-offset: 3px;
+}
+.dfs-tree-game button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.dfs-play-lesson {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 760px) {
+  .dfs-adventure-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dfs-play-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 .method-nav {
   display: flex;
   flex-wrap: wrap;
